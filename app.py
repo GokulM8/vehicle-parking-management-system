@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "E-Commerce Project Started"
+    return render_template('home.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

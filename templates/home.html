@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ShopEase | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">ShopEase</div>
+
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Cart</a></li>
+      <li><a href="/login" class="login-btn">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <h1>Welcome to ShopEase</h1>
+    <p>Your trusted place for quality products</p>
+    <a href="#" class="btn">Explore Products</a>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="feature-card">
+      <i class="fas fa-shipping-fast"></i>
+      <h3>Fast Delivery</h3>
+      <p>Quick and safe delivery to your doorstep</p>
+    </div>
+
+    <div class="feature-card">
+      <i class="fas fa-lock"></i>
+      <h3>Secure Payments</h3>
+      <p>Your transactions are safe with us</p>
+    </div>
+
+    <div class="feature-card">
+      <i class="fas fa-thumbs-up"></i>
+      <h3>Quality Products</h3>
+      <p>Only the best products for our customers</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>© 2025 ShopEase. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

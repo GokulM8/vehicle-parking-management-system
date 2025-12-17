@@ -1,0 +1,26 @@
+Updated UI fixes and minor logic changes
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Mon Dec 15 23:56:18 2025 +0530
+# Committer: Gokul Mallabathula <gokulmallabathula@Gokuls-MacBook-Air.local>
+#
+# interactive rebase in progress; onto c3b8b97
+# Last command done (1 command done):
+#    pick 19a1736 # Added user registration and login module
+# No commands remaining.
+# You are currently editing a commit while rebasing branch 'main' on 'c3b8b97'.
+#
+# Changes to be committed:
+#	new file:   .gitignore
+#	modified:   README.md
+#	new file:   app.py
+#	new file:   requirements.txt
+#	new file:   static/css/style.css
+#	new file:   static/js/register.js
+#	new file:   static/script.js
+#	new file:   templates/.DS_Store
+#	new file:   templates/login.html
+#	new file:   templates/register.html
+#
