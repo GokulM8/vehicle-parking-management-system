@@ -1,6 +1,7 @@
-# E-Commerce Website
+# Vehicle Parking Management System
 
-E-commerce website project for Software Engineering course
+A web-based application to manage vehicle entry, exit, slot allocation,
+and parking fee calculation.
 
 Initial Module:
 - User registration

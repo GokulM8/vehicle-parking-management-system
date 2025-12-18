@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
+  <title>Admin Registration</title>
 
   <!-- Flask CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -15,39 +15,36 @@
 <body>
 
   <div class="wrapper">
-    <header>Register</header>
+    <header>Admin Registration</header>
 
     <!-- Flask form -->
     <form method="POST" action="/register">
 
-      <!-- Username -->
-      <div class="field username">
+      <!-- USERNAME -->
+      <div class="field">
         <div class="input-area">
           <input type="text" name="username" placeholder="Username">
           <i class="icon fas fa-user"></i>
-          <i class="error error-icon fas fa-exclamation-circle"></i>
         </div>
-        <div class="error error-txt">Username can't be blank</div>
+        <div class="error-txt">Username can't be blank</div>
       </div>
 
-      <!-- Email -->
-      <div class="field email">
+      <!-- EMAIL -->
+      <div class="field">
         <div class="input-area">
           <input type="text" name="email" placeholder="Email Address">
           <i class="icon fas fa-envelope"></i>
-          <i class="error error-icon fas fa-exclamation-circle"></i>
         </div>
-        <div class="error error-txt">Email can't be blank</div>
+        <div class="error-txt">Email can't be blank</div>
       </div>
 
-      <!-- Password -->
-      <div class="field password">
+      <!-- PASSWORD -->
+      <div class="field">
         <div class="input-area">
           <input type="password" name="password" placeholder="Password">
           <i class="icon fas fa-lock"></i>
-          <i class="error error-icon fas fa-exclamation-circle"></i>
         </div>
-        <div class="error error-txt">Password can't be blank</div>
+        <div class="error-txt">Password can't be blank</div>
       </div>
 
       <input type="submit" value="Register">
@@ -59,8 +56,8 @@
     </div>
   </div>
 
-  <!-- Flask JS -->
-  <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+  <!-- VALIDATION JS (COMMON FOR LOGIN & REGISTER) -->
+  <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
 
 </body>
 </html>

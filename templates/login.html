@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title>Admin Login</title>
 
   <!-- Flask CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -15,27 +15,27 @@
 <body>
 
   <div class="wrapper">
-    <header>Login Form</header>
+    <header>Admin Login</header>
 
     <!-- Flask form -->
     <form method="POST" action="/login">
 
-      <div class="field email">
+      <!-- EMAIL FIELD -->
+      <div class="field">
         <div class="input-area">
           <input type="text" name="email" placeholder="Email Address">
           <i class="icon fas fa-envelope"></i>
-          <i class="error error-icon fas fa-exclamation-circle"></i>
         </div>
-        <div class="error error-txt">Email can't be blank</div>
+        <div class="error-txt">Email can't be blank</div>
       </div>
 
-      <div class="field password">
+      <!-- PASSWORD FIELD -->
+      <div class="field">
         <div class="input-area">
           <input type="password" name="password" placeholder="Password">
           <i class="icon fas fa-lock"></i>
-          <i class="error error-icon fas fa-exclamation-circle"></i>
         </div>
-        <div class="error error-txt">Password can't be blank</div>
+        <div class="error-txt">Password can't be blank</div>
       </div>
 
       <div class="pass-txt">
@@ -46,13 +46,13 @@
     </form>
 
     <div class="sign-txt">
-      Not yet member?
-      <a href="/register">Signup now</a>
+      Not yet a member?
+      <a href="/register">Register here</a>
     </div>
   </div>
 
-  <!-- Flask JS -->
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <!-- VALIDATION JS -->
+  <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
 
 </body>
 </html>
