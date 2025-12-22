@@ -1,274 +1,211 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-
-*{
+/* =========================
+   GLOBAL RESET & BASE
+========================= */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
 }
 
-body{
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #1e8449; /* ✅ THEME COLOR CHANGED (Parking Green) */
-}
-
-::selection{
-  color: #fff;
-  background: #1e8449; /* ✅ THEME COLOR */
-}
-
-.wrapper{
-  width: 380px;
-  padding: 40px 30px 50px 30px;
-  background: #fff;
-  border-radius: 5px;
-  text-align: center;
-  box-shadow: 10px 10px 15px rgba(0,0,0,0.1);
-}
-
-.wrapper header{
-  font-size: 35px;
-  font-weight: 600;
-}
-
-.wrapper form{
-  margin: 40px 0;
-}
-
-form .field{
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-form .field.shake{
-  animation: shake 0.3s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100%{
-    margin-left: 0px;
-  }
-  20%, 80%{
-    margin-left: -12px;
-  }
-  40%, 60%{
-    margin-left: 12px;
-  }
-}
-
-form .field .input-area{
-  height: 50px;
-  width: 100%;
-  position: relative;
-}
-
-form input{
-  width: 100%;
-  height: 100%;
-  outline: none;
-  padding: 0 45px;
-  font-size: 18px;
-  background: none;
-  caret-color: #1e8449; /* ✅ THEME COLOR */
-  border-radius: 5px;
-  border: 1px solid #bfbfbf;
-  border-bottom-width: 2px;
-  transition: all 0.2s ease;
-}
-
-form .field input:focus,
-form .field.valid input{
-  border-color: #1e8449; /* ✅ THEME COLOR */
-}
-
-form .field.shake input,
-form .field.error input{
-  border-color: #dc3545;
-}
-
-.field .input-area i{
-  position: absolute;
-  top: 50%;
-  font-size: 18px;
-  pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.input-area .icon{
-  left: 15px;
-  color: #bfbfbf;
-  transition: color 0.2s ease;
-}
-
-.input-area .error-icon{
-  right: 15px;
-  color: #dc3545;
-}
-
-form input:focus ~ .icon,
-form .field.valid .icon{
-  color: #1e8449; /* ✅ THEME COLOR */
-}
-
-form input::placeholder{
-  color: #bfbfbf;
-  font-size: 17px;
-}
-
-form .field .error-txt{
-  color: #dc3545;
-  text-align: left;
-  margin-top: 5px;
-}
-
-.wrapper a{
-  color: #1e8449; /* ✅ THEME COLOR */
-  text-decoration: none;
-}
-
-.wrapper a:hover{
-  text-decoration: underline;
-}
-
-form input[type="submit"]{
-  height: 50px;
-  margin-top: 30px;
-  color: #fff;
-  padding: 0;
-  border: none;
-  background: #1e8449; /* ✅ THEME COLOR */
-  cursor: pointer;
-  border-bottom: 2px solid rgba(0,0,0,0.1);
-}
-
-form input[type="submit"]:hover{
-  background: #166534;
-}
-
-/* ---------------- NAVBAR ---------------- */
-
-.navbar{
-  width: 100%;
-  padding: 15px 40px;
-  background: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
-
-.logo{
-  font-size: 24px;
-  font-weight: 600;
-  color: #1e8449; /* ✅ THEME COLOR */
-}
-
-.nav-links{
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.nav-links a{
-  text-decoration: none;
+body {
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: linear-gradient(135deg, #eef2f3, #d9e4f5);
+  min-height: 100vh;
   color: #333;
-  font-weight: 500;
 }
 
-.nav-links a:hover{
-  color: #1e8449; /* ✅ THEME COLOR */
+/* =========================
+ CONTAINERS
+========================= */
+.container {
+  background: #ffffff;
+  width: 420px;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+  margin: 70px auto;
+  animation: fadeIn 0.5s ease-in;
 }
 
-.login-btn{
-  padding: 8px 18px;
-  background: #1e8449; /* ✅ THEME COLOR */
-  color: #fff !important;
-  border-radius: 4px;
+.container.wide {
+  width: 1000px;
 }
 
-.login-btn:hover{
-  background: #166534;
-}
-
-/* ---------------- HERO ---------------- */
-
-.hero{
-  margin-top: 100px;
+/* =========================
+ HEADINGS & TEXT
+========================= */
+h2, h3 {
   text-align: center;
-  padding: 70px 20px;
+  margin-bottom: 20px;
+  color: #2c3e50;
 }
 
-.hero h1{
-  font-size: 42px;
-  margin-bottom: 10px;
+p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+  text-align: center;
 }
 
-.hero p{
-  font-size: 18px;
+/* =========================
+ NAV LINKS (DASHBOARD)
+========================= */
+.nav {
+  text-align: center;
   margin-bottom: 25px;
 }
 
-.btn{
-  padding: 12px 30px;
-  background: #1e8449; /* ✅ THEME COLOR */
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
+.nav a {
+  margin: 0 12px;
+  font-weight: 600;
 }
 
-.btn:hover{
-  background: #166534;
+/* =========================
+ FORM ELEMENTS
+========================= */
+label {
+  font-weight: 600;
+  font-size: 14px;
 }
 
-/* ---------------- FEATURES ---------------- */
-
-.features{
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  padding: 50px 20px;
-  flex-wrap: wrap;
-}
-
-.feature-card{
-  background: #fff;
-  width: 260px;
-  padding: 25px;
-  text-align: center;
+input {
+  width: 100%;
+  padding: 11px;
+  margin-top: 6px;
+  margin-bottom: 18px;
   border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border 0.2s, box-shadow 0.2s;
 }
 
-/* ✅ PARKING ICON HOVER EFFECT */
-.feature-card i{
-  font-size: 40px;
-  color: #1e8449;
-  margin-bottom: 15px;
-  transition: transform 0.3s ease;
+input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74,144,226,0.3);
 }
 
-.feature-card:hover i{
-  transform: scale(1.2);
+/* =========================
+ INPUT ERROR (JS)
+========================= */
+.input-error {
+  border: 2px solid #e74c3c;
+  background-color: #fff5f5;
 }
 
-.feature-card h3{
+/* =========================
+ BUTTONS
+========================= */
+button {
+  width: 100%;
+  background: linear-gradient(135deg, #4a90e2, #357ABD);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+/* =========================
+ LINKS
+========================= */
+a {
+  text-decoration: none;
+  color: #4a90e2;
+  font-weight: 600;
+  display: inline-block;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+ TABLES (DASHBOARD)
+========================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 14px;
+}
+
+th {
+  background: #4a90e2;
+  color: white;
+  padding: 12px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+tr:hover {
+  background-color: #f5f9ff;
+}
+
+/* =========================
+ STATUS COLORS
+========================= */
+.available {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.occupied {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* =========================
+ ALERTS & MESSAGES
+========================= */
+.error {
+  color: #e74c3c;
+  font-weight: 600;
+  text-align: center;
   margin-bottom: 10px;
 }
 
-/* ---------------- FOOTER ---------------- */
-
-.footer{
-  background: #fff;
+.success {
+  color: #27ae60;
+  font-weight: 600;
   text-align: center;
-  padding: 15px;
-  margin-top: 40px;
+  margin-bottom: 10px;
+}
+
+/* =========================
+ FOOTER LINK GROUP
+========================= */
+.footer-links {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.footer-links a {
+  margin: 0 10px;
+}
+
+/* =========================
+ ANIMATIONS
+========================= */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(12px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
 }

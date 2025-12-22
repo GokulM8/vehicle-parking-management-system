@@ -1,62 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Vehicle Parking Management System | Home</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <title>Vehicle Parking Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">VPMS</div>
+<div class="container" style="width:450px; text-align:center;">
 
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="/login" class="login-btn">Admin Login</a></li>
-      <li><a href="/register">Register Admin</a></li>
-    </ul>
-  </nav>
+    <h2>Vehicle Parking Management System</h2>
 
-  <!-- HERO SECTION -->
-  <section class="hero">
-    <h1>Vehicle Parking Management System</h1>
-    <p>Smart solution to manage vehicle parking efficiently</p>
-    <a href="/login" class="btn">Go to Dashboard</a>
-  </section>
+    <p>
+        A web-based application to manage vehicle parking,
+        slot allocation, and parking fee calculation efficiently.
+    </p>
 
-  <!-- FEATURES -->
-  <section class="features">
-    <div class="feature-card">
-      <i class="fas fa-car"></i>
-      <h3>Vehicle Entry & Exit</h3>
-      <p>Record vehicle entry and exit with accurate time tracking</p>
-    </div>
+    <br>
 
-    <div class="feature-card">
-      <i class="fas fa-parking"></i>
-      <h3>Slot Management</h3>
-      <p>Monitor available and occupied parking slots in real time</p>
-    </div>
+    <a href="/login">
+        <button>Admin Login</button>
+    </a>
 
-    <div class="feature-card">
-      <i class="fas fa-clock"></i>
-      <h3>Parking Fee Calculation</h3>
-      <p>Automatically calculate parking charges based on duration</p>
-    </div>
-  </section>
+    <br><br>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <p>© 2025 Vehicle Parking Management System. All rights reserved.</p>
-  </footer>
+    <a href="/register">
+        <button>Admin Register</button>
+    </a>
+
+</div>
 
 </body>
 </html>

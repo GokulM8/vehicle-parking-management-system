@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vehicle Exit</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login-style.css') }}">
+</head>
+<body>
+
+<div class="form-container">
+  {% if success %}
+    <h2 class="success">Exit Successful!</h2>
+    <p><strong>Vehicle:</strong> {{ vehicle_no }}</p>
+    <p><strong>Slot:</strong> {{ slot_name }}</p>
+    <p><strong>Fee:</strong> ₹{{ fee }}</p>
+    <a href="/dashboard">Back to Dashboard</a>
+  {% else %}
+    <form method="POST">
+      <h2>Vehicle Exit</h2>
+
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
+
+      <div class="input-group">
+        <input type="text" name="vehicle_no" required>
+        <label>Vehicle Number</label>
+      </div>
+
+      <button type="submit">Exit Vehicle</button>
+      <a href="/dashboard">Back to Dashboard</a>
+    </form>
+  {% endif %}
+</div>
+
+</body>
+</html>

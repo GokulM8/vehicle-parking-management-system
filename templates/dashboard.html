@@ -1,32 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>VPMS Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">VPMS</div>
-    <ul class="nav-links">
-      <li><a href="/dashboard">Dashboard</a></li>
-      <li><a href="/vehicle-entry">Vehicle Entry</a></li>
-      <li><a href="/vehicle-exit">Vehicle Exit</a></li>
-      <li><a href="/">Home</a></li> <!-- ✅ Go to Home -->
-    </ul>
-  </nav>
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>VPMS</h2>
+    <a href="/vehicle-entry">➕ Vehicle Entry</a>
+    <a href="/vehicle-exit">🚗 Vehicle Exit</a>
+    <a href="/logout">🚪 Logout</a>
+</div>
 
-  <!-- DASHBOARD CONTENT -->
-  <section class="hero">
-    <h1>Admin Dashboard</h1>
-    <p>Manage vehicle parking operations efficiently</p>
+<!-- MAIN CONTENT -->
+<div class="main">
 
-    <a href="/vehicle-entry" class="btn">Vehicle Entry</a>
-    <a href="/vehicle-exit" class="btn">Vehicle Exit</a>
-    <a href="/" class="btn">Go to Home</a> <!-- ✅ Button -->
-  </section>
+    <!-- Welcome Card -->
+    <div class="card">
+        <h3>Welcome, {{ username }}</h3>
+        <p>Manage parking slots, vehicles, and fees from one place.</p>
+    </div>
+
+    <!-- Slot Status -->
+    <div class="card">
+        <h3>Parking Slot Status</h3>
+        <table>
+            <tr>
+                <th>Slot</th>
+                <th>Status</th>
+            </tr>
+            {% for slot in slots %}
+            <tr>
+                <td>{{ slot.slot_name }}</td>
+                <td class="{{ 'available' if slot.status == 'Available' else 'occupied' }}">
+                    {{ slot.status }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Vehicle Records -->
+    <div class="card">
+        <h3>Vehicle Parking Records</h3>
+        <table>
+            <tr>
+                <th>Vehicle No</th>
+                <th>Owner</th>
+                <th>Slot</th>
+                <th>Entry</th>
+                <th>Exit</th>
+                <th>Fee (₹)</th>
+            </tr>
+            {% for v in vehicles %}
+            <tr>
+                <td>{{ v.vehicle_no }}</td>
+                <td>{{ v.owner_name }}</td>
+                <td>{{ v.slot_id }}</td>
+                <td>{{ v.entry_time }}</td>
+                <td>{{ v.exit_time or '-' }}</td>
+                <td>{{ v.fee or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
 
 </body>
 </html>

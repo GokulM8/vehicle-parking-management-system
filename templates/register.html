@@ -1,63 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+<<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Registration</title>
-
-  <!-- Flask CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login-style.css') }}">
 </head>
 <body>
 
-  <div class="wrapper">
-    <header>Admin Registration</header>
+<div class="form-container">
+  <form method="POST">
+    <h2>Create Admin Account</h2>
 
-    <!-- Flask form -->
-    <form method="POST" action="/register">
-
-      <!-- USERNAME -->
-      <div class="field">
-        <div class="input-area">
-          <input type="text" name="username" placeholder="Username">
-          <i class="icon fas fa-user"></i>
-        </div>
-        <div class="error-txt">Username can't be blank</div>
-      </div>
-
-      <!-- EMAIL -->
-      <div class="field">
-        <div class="input-area">
-          <input type="text" name="email" placeholder="Email Address">
-          <i class="icon fas fa-envelope"></i>
-        </div>
-        <div class="error-txt">Email can't be blank</div>
-      </div>
-
-      <!-- PASSWORD -->
-      <div class="field">
-        <div class="input-area">
-          <input type="password" name="password" placeholder="Password">
-          <i class="icon fas fa-lock"></i>
-        </div>
-        <div class="error-txt">Password can't be blank</div>
-      </div>
-
-      <input type="submit" value="Register">
-    </form>
-
-    <div class="sign-txt">
-      Already have an account?
-      <a href="/login">Login now</a>
+    <div class="input-group">
+      <input type="text" name="username" required>
+      <label>Username</label>
     </div>
-  </div>
 
-  <!-- VALIDATION JS (COMMON FOR LOGIN & REGISTER) -->
-  <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+    <div class="input-group">
+      <input type="email" name="email" required>
+      <label>Email</label>
+    </div>
+
+    <div class="input-group">
+      <input type="password" name="password" required>
+      <label>Password</label>
+    </div>
+
+    <button type="submit">Register</button>
+
+    <p>Already have an account? <a href="/login">Login</a></p>
+  </form>
+</div>
 
 </body>
 </html>

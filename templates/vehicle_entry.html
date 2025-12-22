@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Park Vehicle</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login-style.css') }}">
+</head>
+<body>
+
+<div class="form-container">
+  <form method="POST">
+    <h2>Vehicle Entry</h2>
+
+    <div class="input-group">
+      <input type="text" name="vehicle_no" required>
+      <label>Vehicle Number</label>
+    </div>
+
+    <div class="input-group">
+      <input type="text" name="owner_name" required>
+      <label>Owner Name</label>
+    </div>
+
+    <button type="submit">Park Vehicle</button>
+    <a href="/dashboard">Back to Dashboard</a>
+  </form>
+</div>
+
+</body>
+</html>

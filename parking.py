@@ -1,31 +1,46 @@
 import sqlite3
+import os
 
-# Create and connect to database
-conn = sqlite3.connect("parking.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "parking.db")
+
+conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 
-# Admin users table
+# -------- USERS TABLE --------
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE users (
+    user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL
 )
 """)
 
-# Vehicle parking table
+# -------- PARKING SLOTS TABLE --------
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS vehicles (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    vehicle_no TEXT UNIQUE NOT NULL,
-    vehicle_type TEXT NOT NULL,
-    entry_time TEXT NOT NULL,
-    exit_time TEXT
+CREATE TABLE parking_slots (
+    slot_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    slot_name TEXT UNIQUE NOT NULL,
+    status TEXT CHECK(status IN ('Available', 'Occupied')) DEFAULT 'Available'
+)
+""")
+
+# -------- VEHICLES TABLE --------
+cursor.execute("""
+CREATE TABLE vehicles (
+    vehicle_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    vehicle_no TEXT NOT NULL,
+    owner_name TEXT NOT NULL,
+    slot_id INTEGER,
+    entry_time DATETIME,
+    exit_time DATETIME,
+    fee INTEGER,
+    FOREIGN KEY (slot_id) REFERENCES parking_slots(slot_id)
 )
 """)
 
 conn.commit()
 conn.close()
 
-print("✅ parking.db created successfully")
+print("✅ Fresh database created with all tables")
