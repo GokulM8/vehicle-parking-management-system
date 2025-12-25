@@ -1,33 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Vehicle Parking Management System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <meta charset="UTF-8">
+  <title>VPMS | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Theme CSS & JS (same as dashboard) -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </head>
-<body>
 
-<div class="container" style="width:450px; text-align:center;">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
-    <h2>Vehicle Parking Management System</h2>
+<!-- CENTER CONTAINER -->
+<div class="min-h-screen flex flex-col items-center justify-center px-4">
 
-    <p>
-        A web-based application to manage vehicle parking,
-        slot allocation, and parking fee calculation efficiently.
-    </p>
+  <!-- APP TITLE -->
+  <h1 class="text-4xl font-bold text-blue-600 mb-3">
+    VPMS
+  </h1>
 
-    <br>
+  <!-- SUBTITLE -->
+  <p class="text-center text-gray-600 dark:text-gray-400 mb-10 max-w-md">
+    Vehicle Parking Management System to manage slots, vehicles,
+    and parking operations efficiently.
+  </p>
 
-    <a href="/login">
-        <button>Admin Login</button>
-    </a>
+  <!-- ACTION BUTTONS -->
+  <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-8 w-full max-w-sm
+              animate-fade">
 
-    <br><br>
+    <div class="flex flex-col gap-4">
 
-    <a href="/register">
-        <button>Admin Register</button>
-    </a>
+      <!-- LOGIN -->
+      <a href="{{ url_for('login') }}"
+         class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg
+                font-semibold transition duration-200">
+        Admin Login
+      </a>
+
+      <!-- REGISTER -->
+      <a href="{{ url_for('register') }}"
+         class="border border-blue-600 text-blue-600 dark:text-blue-400
+                hover:bg-blue-600 hover:text-white text-center py-3 rounded-lg
+                font-semibold transition duration-200">
+        Admin Register
+      </a>
+
+    </div>
+
+  </div>
 
 </div>
+
+<!-- FADE ANIMATION -->
+<style>
+  .animate-fade {
+    animation: fadeUp 0.6s ease;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
 
 </body>
 </html>
