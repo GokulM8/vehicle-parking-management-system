@@ -6,10 +6,22 @@
   <title>VPMS | Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <!-- Tailwind with Dark Mode Configuration -->
   <script>
     tailwind.config = {
       darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -17,136 +29,260 @@
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
+  <!-- Custom Dashboard CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+<body class="text-gray-900 dark:text-gray-100 overflow-x-hidden">
+
+<body class="text-gray-900 dark:text-gray-100 overflow-x-hidden">
+
+<!-- Mobile Overlay -->
+<div id="mobileOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="flex min-h-screen">
 
   <!-- SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-gray-800 shadow-md p-6 flex flex-col h-screen sticky top-0 transition-colors">
-    <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-8">VPMS</h2>
+  <aside id="sidebar" class="w-64 lg:w-72 p-4 lg:p-6 flex flex-col h-screen sticky top-0">
+    <!-- Close button for mobile -->
+    <button onclick="toggleMobileMenu()" class="lg:hidden absolute top-4 right-4 p-2 rounded-lg">
+      <i class="fa-solid fa-times text-gray-700 dark:text-gray-300"></i>
+    </button>
 
-    <nav class="flex-1 space-y-2">
-      <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
-        <i class="fa-solid fa-chart-line"></i> Dashboard
+    <!-- Logo -->
+    <div class="mb-6 lg:mb-8">
+      <div class="flex items-center gap-3">
+        <div class="logo-circle">
+          <i class="fa-solid fa-parking text-white text-xl"></i>
+        </div>
+        <h2 class="text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">VPMS</h2>
+      </div>
+    </div>
+
+    <!-- MENU Label -->
+    <p class="menu-label">Menu</p>
+
+    <nav class="flex-1 overflow-y-auto">
+      <a href="/dashboard" class="menu-item active">
+        <i class="fa-solid fa-th-large"></i>
+        <span>Dashboard</span>
       </a>
-      <a href="/payments" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-credit-card"></i> Payments
+      <a href="/payments" class="menu-item">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Payments</span>
       </a>
-      <a href="/vehicle-entry" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Vehicle Entry
+      <a href="/vehicle-entry" class="menu-item">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        <span>Vehicle Entry</span>
       </a>
-      <a href="/vehicle-exit" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i> Vehicle Exit
+      <a href="/vehicle-exit" class="menu-item">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Vehicle Exit</span>
+      </a>
+      <a href="/profile" class="menu-item">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
       </a>
     </nav>
 
-    <a href="/logout" class="flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg">
-      <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
+    <!-- GENERAL Label -->
+    <p class="menu-label">General</p>
+
+    <div>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-cog"></i>
+        <span>Settings</span>
+      </a>
+      <a href="/logout" class="menu-item text-red-600 dark:text-red-400">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </div>
   </aside>
 
   <!-- MAIN -->
-  <main class="flex-1 p-8">
-    <div class="flex gap-6">
-      
-      <!-- LEFT CONTENT AREA -->
-      <div class="flex-1">
-        <!-- HEADER -->
-        <div class="mb-8 flex items-center justify-between">
-          <div>
-            <h1 class="text-3xl font-bold dark:text-white">Welcome, {{ username }}</h1>
-            <p class="text-gray-500 dark:text-gray-400">
-              Manage parking slots, vehicles, and payments
-            </p>
-          </div>
+  <main class="main-content">
+    <!-- HEADER BAR -->
+    <div class="dashboard-header">
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden header-icon">
+        <i class="fa-solid fa-bars"></i>
+      </button>
 
-          <!-- TOP RIGHT -->
-          <div class="flex items-center gap-4">
-            <!-- THEME TOGGLE -->
-            <button 
-              id="themeToggle"
-              onclick="toggleTheme()"
-              class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-              title="Toggle theme"
-            >
-              <i id="themeIcon" class="fa-solid fa-moon text-gray-700 dark:text-gray-300"></i>
-            </button>
+      <!-- Search Bar -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search vehicles..." id="globalSearch" onkeyup="filterRecords()">
+      </div>
 
-            <!-- PROFILE -->
-            <div class="relative">
-              <button onclick="toggleProfile()"
-                class="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                <i class="fa-solid fa-user"></i>
-                <span>{{ username }}</span>
-                <i class="fa-solid fa-chevron-down text-sm"></i>
-              </button>
+      <!-- RIGHT ACTIONS -->
+      <div class="header-icons">
+        <!-- Notifications -->
+        <button class="header-icon relative">
+          <i class="fa-solid fa-bell"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
 
-              <div id="profileMenu"
-                class="hidden absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 shadow-lg rounded-xl p-4 z-50 border border-gray-200 dark:border-gray-700">
-                <p class="font-semibold dark:text-white">{{ username }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">{{ user_email }}</p>
-                <div class="border-t border-gray-200 dark:border-gray-700 pt-3 mt-3 space-y-1">
-                  <a href="/profile"
-                    class="block text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 px-3 py-2 rounded-lg">
-                    <i class="fa-solid fa-user-pen mr-2"></i> Edit Profile
-                  </a>
-                  <a href="/logout"
-                    class="block text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 px-3 py-2 rounded-lg">
-                    <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout
-                  </a>
-                </div>
-              </div>
+        <!-- Profile -->
+        <div class="relative">
+          <button onclick="toggleProfile()" class="user-profile">
+            <img src="https://ui-avatars.com/api/?name={{ username }}&background=16a34a&color=fff" alt="Profile" class="user-avatar">
+            <div class="hidden lg:block text-left">
+              <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ username }}</p>
             </div>
+            <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
+          </button>
+
+          <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 sm:w-56 content-card shadow-2xl z-50">
+            <a href="/profile" class="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-user-pen"></i>
+              <span class="text-sm">Edit Profile</span>
+            </a>
+            <a href="/logout" class="flex items-center gap-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span class="text-sm">Logout</span>
+            </a>
           </div>
         </div>
+      </div>
+    </div>
 
+    <!-- PAGE TITLE -->
+    <div class="page-title-section">
+      <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Monitor and manage your parking system efficiently.</p>
+      </div>
+      <div class="action-buttons">
+        <button class="btn-primary">
+          <i class="fa-solid fa-plus"></i>
+          Add Vehicle
+        </button>
+        <button class="btn-secondary">
+          <i class="fa-solid fa-download"></i>
+          Export
+        </button>
+      </div>
+    </div>
+
+    <!-- STATISTICS CARDS -->
+    <div class="stat-cards-grid">
+      <!-- Total Parking Slots Card - Green -->
+      <div class="stat-card-green">
+        <div class="stat-card-header">
+          <div>
+            <p class="stat-label">Total Parking Slots</p>
+            <p class="stat-number">{{ slots|length }}</p>
+            <p class="stat-change">
+              <i class="fa-solid fa-arrow-up"></i>
+              Capacity managed
+            </p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-parking"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Occupied Slots Card - White -->
+      <div class="stat-card-white">
+        <div class="stat-card-header">
+          <div>
+            <p class="stat-label">Occupied Slots</p>
+            <p class="stat-number" style="color: #ef4444;">{{ slots|selectattr('status', 'equalto', 'Occupied')|list|length }}</p>
+            <p class="stat-change">
+              <i class="fa-solid fa-car" style="color: #ef4444;"></i>
+              Currently parked
+            </p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-car" style="color: #ef4444;"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Available Slots Card - White -->
+      <div class="stat-card-white">
+        <div class="stat-card-header">
+          <div>
+            <p class="stat-label">Available Slots</p>
+            <p class="stat-number" style="color: #16a34a;">{{ slots|selectattr('status', 'equalto', 'Available')|list|length }}</p>
+            <p class="stat-change">
+              <i class="fa-solid fa-check-circle" style="color: #16a34a;"></i>
+              Ready to use
+            </p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-check-circle" style="color: #16a34a;"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Revenue Card - White -->
+      <div class="stat-card-white">
+        <div class="stat-card-header">
+          <div>
+            <p class="stat-label">Total Revenue</p>
+            <p class="stat-number" style="color: #16a34a;">₹{{ total_amount }}</p>
+            <p class="stat-change">
+              <i class="fa-solid fa-coins" style="color: #16a34a;"></i>
+              Earnings today
+            </p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-coins" style="color: #16a34a;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col xl:flex-row gap-6">
+      <!-- LEFT CONTENT -->
+      <div class="flex-1 space-y-6">
         <!-- VEHICLE RECORDS -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mb-6 transition-colors">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold dark:text-white">Vehicle Parking Records</h2>
-            
-            <div class="flex items-center gap-3">
+        <div class="content-card">
+      <div class="card-header">
+        <h2 class="card-title">Vehicle Parking Records</h2>
+        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
               <!-- SEARCH -->
-              <div class="relative">
+              <div class="relative flex-1 sm:flex-none">
                 <input 
                   type="text" 
                   id="searchInput"
-                  placeholder="Search by vehicle no or owner..."
-                  class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Search vehicle..."
+                  class="pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-xs lg:text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 focus:border-green-500 w-full sm:w-40 lg:w-64 bg-white dark:bg-gray-800"
                   onkeyup="filterRecords()"
                 >
-                <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
+                <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500 text-xs"></i>
               </div>
               
               <!-- FILTER -->
               <select id="filterSelect"
-                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                class="border border-gray-300 dark:border-gray-600 rounded-lg px-2 lg:px-3 py-2 text-xs lg:text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800"
                 onchange="filterRecords()">
-                <option value="all">All Records</option>
-                <option value="active">Currently Parked</option>
+                <option value="all">All</option>
+                <option value="active">Parked</option>
                 <option value="completed">Completed</option>
               </select>
               
               <!-- SORT -->
               <select id="sortSelect"
-                class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                class="border border-gray-300 dark:border-gray-600 rounded-lg px-2 lg:px-3 py-2 text-xs lg:text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800"
                 onchange="sortRecords()">
-                <option value="new">Newest First</option>
-                <option value="old">Oldest First</option>
+                <option value="new">Newest</option>
+                <option value="old">Oldest</option>
               </select>
             </div>
           </div>
 
           <!-- CARD VIEW -->
-          <div id="recordsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div id="recordsContainer" class="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 gap-3 lg:gap-4">
             {% for v in vehicles %}
-            <div class="vehicle-card border rounded-xl p-5 hover:shadow-lg transition-shadow cursor-pointer
+            <div class="vehicle-card bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 lg:p-5 hover-lift cursor-pointer
               {% if v.exit_time %}
-                border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50
+                
               {% else %}
-                border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/30
+                border-2 border-green-400 dark:border-green-500
               {% endif %}"
               data-vehicle-no="{{ v.vehicle_no|lower }}"
               data-owner="{{ v.owner_name|lower }}"
@@ -154,59 +290,83 @@
               data-entry="{{ v.entry_time }}">
               
               <!-- HEADER -->
-              <div class="flex items-start justify-between mb-4">
-                <div>
-                  <h3 class="font-bold text-lg text-gray-800 dark:text-white">{{ v.vehicle_no }}</h3>
-                  <p class="text-sm text-gray-600 dark:text-gray-300">{{ v.owner_name }}</p>
+              <div class="flex items-start justify-between mb-3 lg:mb-4">
+                <div class="flex items-center gap-2 lg:gap-3 flex-1 min-w-0">
+                  <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br flex-shrink-0
+                    {% if v.exit_time %}
+                      from-gray-400 to-gray-500
+                    {% else %}
+                      from-green-500 to-green-600
+                    {% endif %}
+                    rounded-xl flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-car text-white text-sm lg:text-lg"></i>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h3 class="font-bold text-sm lg:text-lg text-gray-900 dark:text-white truncate">{{ v.vehicle_no }}</h3>
+                    <p class="text-xs lg:text-sm text-gray-700 dark:text-gray-300 truncate">{{ v.owner_name }}</p>
+                  </div>
                 </div>
-                <span class="px-3 py-1 rounded-full text-xs font-semibold
+                <span class="px-2 lg:px-3 py-1 lg:py-1.5 rounded-full text-xs font-semibold flex-shrink-0
                   {% if v.exit_time %}
-                    bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200
+                    bg-gray-200/80 dark:bg-gray-600/80 text-gray-700 dark:text-gray-200
                   {% else %}
-                    bg-blue-200 dark:bg-blue-800 text-blue-700 dark:text-blue-200
+                    bg-green-100/80 dark:bg-green-800/80 text-green-700 dark:text-green-200
                   {% endif %}">
                   {% if v.exit_time %}
-                    <i class="fa-solid fa-check-circle mr-1"></i> Completed
+                    <i class="fa-solid fa-check-circle mr-1"></i>Done
                   {% else %}
-                    <i class="fa-solid fa-car mr-1"></i> Parked
+                    <i class="fa-solid fa-clock mr-1"></i>Active
                   {% endif %}
                 </span>
               </div>
               
               <!-- DETAILS -->
-              <div class="space-y-2 mb-4">
-                <div class="flex items-center text-sm">
-                  <i class="fa-solid fa-map-marker-alt text-gray-400 dark:text-gray-500 w-5"></i>
-                  <span class="text-gray-600 dark:text-gray-300">Slot: <span class="font-semibold">{{ v.slot_id }}</span></span>
+              <div class="space-y-2 mb-3 lg:mb-4">
+                <div class="flex items-center text-xs lg:text-sm">
+                  <div class="w-7 h-7 lg:w-8 lg:h-8 bg-gray-100/80 dark:bg-gray-700/80 rounded-lg flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
+                    <i class="fa-solid fa-map-marker-alt text-gray-700 dark:text-gray-400 text-xs"></i>
+                  </div>
+                  <span class="text-gray-700 dark:text-gray-300">Slot: <span class="font-semibold text-gray-900 dark:text-white">{{ v.slot_id }}</span></span>
                 </div>
                 
-                <div class="flex items-center text-sm">
-                  <i class="fa-solid fa-arrow-right-to-bracket text-green-500 dark:text-green-400 w-5"></i>
-                  <span class="text-gray-600 dark:text-gray-300">Entry: <span class="font-medium">{{ v.entry_time }}</span></span>
+                <div class="flex items-center text-xs lg:text-sm">
+                  <div class="w-7 h-7 lg:w-8 lg:h-8 bg-green-100/80 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right-to-bracket text-green-600 dark:text-green-400 text-xs"></i>
+                  </div>
+                  <span class="text-gray-700 dark:text-gray-300 truncate">Entry: <span class="font-medium text-gray-900 dark:text-white">{{ v.entry_time }}</span></span>
                 </div>
                 
                 {% if v.exit_time %}
-                <div class="flex items-center text-sm">
-                  <i class="fa-solid fa-arrow-right-from-bracket text-red-500 dark:text-red-400 w-5"></i>
-                  <span class="text-gray-600 dark:text-gray-300">Exit: <span class="font-medium">{{ v.exit_time }}</span></span>
+                <div class="flex items-center text-xs lg:text-sm">
+                  <div class="w-7 h-7 lg:w-8 lg:h-8 bg-red-100/80 dark:bg-red-900/30 rounded-lg flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
+                    <i class="fa-solid fa-arrow-right-from-bracket text-red-600 dark:text-red-400 text-xs"></i>
+                  </div>
+                  <span class="text-gray-700 dark:text-gray-300 truncate">Exit: <span class="font-medium text-gray-900 dark:text-white">{{ v.exit_time }}</span></span>
                 </div>
                 {% else %}
-                <div class="flex items-center text-sm">
-                  <i class="fa-solid fa-clock text-orange-500 dark:text-orange-400 w-5"></i>
+                <div class="flex items-center text-xs lg:text-sm">
+                  <div class="w-7 h-7 lg:w-8 lg:h-8 bg-orange-100/80 dark:bg-orange-900/30 rounded-lg flex items-center justify-center mr-2 lg:mr-3 flex-shrink-0">
+                    <i class="fa-solid fa-clock text-orange-600 dark:text-orange-400 text-xs"></i>
+                  </div>
                   <span class="text-orange-600 dark:text-orange-400 font-medium">Currently Parked</span>
                 </div>
                 {% endif %}
               </div>
               
               <!-- FEE -->
-              <div class="pt-4 border-t border-gray-200 dark:border-gray-600">
+              <div class="pt-3 lg:pt-4 border-t-2 border-gray-200/50 dark:border-gray-600/50">
                 <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600 dark:text-gray-300">Parking Fee</span>
-                  <span class="text-lg font-bold text-blue-600 dark:text-blue-400">
+                  <span class="text-xs lg:text-sm font-medium text-gray-700 dark:text-gray-300">Parking Fee</span>
+                  <span class="text-lg lg:text-xl font-bold
+                    {% if v.fee %}
+                      text-green-600 dark:text-green-400
+                    {% else %}
+                      text-gray-400 dark:text-gray-500
+                    {% endif %}">
                     {% if v.fee %}
                       ₹{{ v.fee }}
                     {% else %}
-                      <span class="text-gray-400 dark:text-gray-500">Pending</span>
+                      Pending
                     {% endif %}
                   </span>
                 </div>
@@ -216,32 +376,43 @@
           </div>
           
           <!-- EMPTY STATE -->
-          <div id="emptyState" class="hidden text-center py-12">
-            <i class="fa-solid fa-car text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
-            <p class="text-gray-500 dark:text-gray-400 text-lg">No records found</p>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-2">Try adjusting your search or filter</p>
+          <div id="emptyState" class="hidden text-center py-12 lg:py-16">
+            <div class="w-20 h-20 lg:w-24 lg:h-24 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fa-solid fa-car text-4xl lg:text-5xl text-gray-400 dark:text-gray-500"></i>
+            </div>
+            <p class="text-gray-900 dark:text-gray-300 text-lg lg:text-xl font-semibold mb-2">No records found</p>
+            <p class="text-gray-700 dark:text-gray-400 text-sm">Try adjusting your search or filter</p>
           </div>
         </div>
 
-        <!-- OCCUPIED SLOTS -->
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 transition-colors">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold dark:text-white">Parking Slots</h2>
+        <!-- PARKING SLOTS OVERVIEW -->
+        <div class="content-card">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 lg:gap-0 mb-4 lg:mb-6">
+            <h2 class="text-lg lg:text-xl font-bold text-gray-900 dark:text-white">Parking Slots Overview</h2>
+            <button class="btn-primary">
+              <i class="fa-solid fa-plus mr-1 lg:mr-2"></i>Add Slot
+            </button>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- OCCUPIED SLOTS -->
-            <div>
-              <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Occupied Slots</h3>
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div class="bg-gradient-to-br from-red-50 to-red-100/50 dark:from-red-900/20 dark:to-red-800/10 rounded-xl p-5 border border-red-200 dark:border-red-800">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Occupied Slots</h3>
+                <span class="px-3 py-1 bg-red-600 text-white text-sm font-semibold rounded-full">
+                  {{ slots|selectattr('status', 'equalto', 'Occupied')|list|length }}
+                </span>
+              </div>
+              <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 max-h-64 overflow-y-auto">
                 {% for slot in slots %}
                   {% if slot.status == 'Occupied' %}
-                  <div class="p-4 rounded-lg border-2 border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/30 text-center">
-                    <div class="flex items-center justify-center mb-2">
-                      <i class="fa-solid fa-car text-red-600 dark:text-red-400 text-xl"></i>
+                  <div class="group relative">
+                    <div class="p-3 rounded-xl bg-white dark:bg-gray-800 border-2 border-red-300 dark:border-red-600 text-center hover:shadow-lg transition-all duration-200 cursor-pointer">
+                      <div class="w-8 h-8 bg-red-100 dark:bg-red-900/40 rounded-lg flex items-center justify-center mx-auto mb-2">
+                        <i class="fa-solid fa-car text-red-600 dark:text-red-400 text-sm"></i>
+                      </div>
+                      <p class="font-bold text-red-700 dark:text-red-300 text-xs">{{ slot.slot_name }}</p>
                     </div>
-                    <p class="font-bold text-red-700 dark:text-red-300">{{ slot.slot_name }}</p>
-                    <p class="text-xs text-red-600 dark:text-red-400 mt-1">Occupied</p>
                   </div>
                   {% endif %}
                 {% endfor %}
@@ -249,25 +420,31 @@
 
               {% set occupied_count = slots|selectattr('status', 'equalto', 'Occupied')|list|length %}
               {% if occupied_count == 0 %}
-              <div class="text-center py-6 text-gray-500 dark:text-gray-400">
-                <i class="fa-solid fa-parking text-3xl mb-2"></i>
-                <p class="text-sm">No slots currently occupied</p>
+              <div class="text-center py-8">
+                <i class="fa-solid fa-parking text-4xl text-red-200 dark:text-red-900 mb-3"></i>
+                <p class="text-sm text-gray-600 dark:text-gray-400">No slots currently occupied</p>
               </div>
               {% endif %}
             </div>
 
             <!-- AVAILABLE SLOTS -->
-            <div>
-              <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Available Slots</h3>
-              <div class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+            <div class="bg-gradient-to-br from-green-50 to-green-100/50 dark:from-green-900/20 dark:to-green-800/10 rounded-xl p-5 border border-green-200 dark:border-green-800">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">Available Slots</h3>
+                <span class="px-3 py-1 bg-green-600 text-white text-sm font-semibold rounded-full">
+                  {{ slots|selectattr('status', 'equalto', 'Available')|list|length }}
+                </span>
+              </div>
+              <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 max-h-64 overflow-y-auto">
                 {% for slot in slots %}
                   {% if slot.status == 'Available' %}
-                  <div class="p-2 rounded-lg border border-green-200 dark:border-green-700 bg-green-50 dark:bg-green-900/30 text-center">
-                    <div class="flex items-center justify-center mb-1">
-                      <i class="fa-solid fa-parking text-green-600 dark:text-green-400 text-sm"></i>
+                  <div class="group relative">
+                    <div class="p-2 rounded-lg bg-white dark:bg-gray-800 border border-green-200 dark:border-green-700 text-center hover:shadow-md transition-all duration-200 cursor-pointer hover:border-green-400">
+                      <div class="flex items-center justify-center mb-1">
+                        <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-xs"></i>
+                      </div>
+                      <p class="font-semibold text-green-700 dark:text-green-300 text-xs">{{ slot.slot_name }}</p>
                     </div>
-                    <p class="font-semibold text-green-700 dark:text-green-300 text-xs">{{ slot.slot_name }}</p>
-                    <p class="text-xs text-green-600 dark:text-green-400 mt-0.5">Free</p>
                   </div>
                   {% endif %}
                 {% endfor %}
@@ -275,9 +452,9 @@
 
               {% set available_count = slots|selectattr('status', 'equalto', 'Available')|list|length %}
               {% if available_count == 0 %}
-              <div class="text-center py-6 text-gray-500 dark:text-gray-400">
-                <i class="fa-solid fa-car text-2xl mb-2"></i>
-                <p class="text-sm">All slots are occupied</p>
+              <div class="text-center py-8">
+                <i class="fa-solid fa-car text-3xl text-green-200 dark:text-green-900 mb-3"></i>
+                <p class="text-sm text-gray-600 dark:text-gray-400">All slots are occupied</p>
               </div>
               {% endif %}
             </div>
@@ -285,32 +462,166 @@
         </div>
       </div>
 
-      <!-- RIGHT SIDEBAR - TOTAL AMOUNT -->
-      <aside class="w-80 flex-shrink-0">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 sticky top-8 transition-colors">
-          <div class="text-center mb-6">
-            <i class="fa-solid fa-wallet text-4xl text-blue-600 dark:text-blue-400 mb-3"></i>
-            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Revenue</h3>
+      <!-- RIGHT SIDEBAR -->
+      <aside class="w-full xl:w-96 flex-shrink-0 space-y-6">
+        <!-- REVENUE CARD -->
+        <div class="stat-card-green">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="stat-icon-wrapper">
+              <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div>
+              <p class="text-sm opacity-90">Total Revenue</p>
+              <p class="text-xs opacity-75">Amount Collected</p>
+            </div>
           </div>
           
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 rounded-xl p-6 text-center">
-            <p class="text-gray-600 dark:text-gray-300 text-sm mb-2">Amount Collected</p>
-            <h2 class="text-4xl font-bold text-blue-700 dark:text-blue-400">₹ {{ total_amount }}</h2>
-          </div>
+          <h2 class="text-4xl font-bold mb-2">₹{{ total_amount }}</h2>
+          <p class="text-sm opacity-80">
+            <i class="fa-solid fa-arrow-trend-up mr-2"></i>
+            <span>+12% from last month</span>
+          </p>
+        </div>
 
-          <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex items-center justify-between text-sm mb-2">
-              <span class="text-gray-600 dark:text-gray-300">Total Slots</span>
-              <span class="font-semibold dark:text-white">{{ slots|length }}</span>
+        <!-- QUICK STATS -->
+        <div class="content-card">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Statistics</h3>
+          
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 dark:bg-green-900/40 rounded-lg flex items-center justify-center">
+                  <i class="fa-solid fa-parking text-green-600 dark:text-green-400"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total Slots</span>
+              </div>
+              <span class="text-xl font-bold text-gray-900 dark:text-white">{{ slots|length }}</span>
             </div>
-            <div class="flex items-center justify-between text-sm mb-2">
-              <span class="text-gray-600 dark:text-gray-300">Occupied</span>
-              <span class="font-semibold text-red-600 dark:text-red-400">{{ slots|selectattr('status', 'equalto', 'Occupied')|list|length }}</span>
+
+            <div class="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/20 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/40 rounded-lg flex items-center justify-center">
+                  <i class="fa-solid fa-car text-red-600 dark:text-red-400"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Occupied</span>
+              </div>
+              <span class="text-xl font-bold text-red-600 dark:text-red-400">{{ slots|selectattr('status', 'equalto', 'Occupied')|list|length }}</span>
             </div>
-            <div class="flex items-center justify-between text-sm">
-              <span class="text-gray-600 dark:text-gray-300">Available</span>
-              <span class="font-semibold text-green-600 dark:text-green-400">{{ slots|selectattr('status', 'equalto', 'Available')|list|length }}</span>
+
+            <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 dark:bg-green-900/40 rounded-lg flex items-center justify-center">
+                  <i class="fa-solid fa-check-circle text-green-600 dark:text-green-400"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Available</span>
+              </div>
+              <span class="text-xl font-bold text-green-600 dark:text-green-400">{{ slots|selectattr('status', 'equalto', 'Available')|list|length }}</span>
             </div>
+
+            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 dark:bg-green-900/40 rounded-lg flex items-center justify-center">
+                  <i class="fa-solid fa-chart-line text-green-600 dark:text-green-400"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Occupancy</span>
+              </div>
+              <span class="text-xl font-bold text-green-600 dark:text-green-400">
+                {% if slots|length > 0 %}
+                  {{ ((slots|selectattr('status', 'equalto', 'Occupied')|list|length / slots|length) * 100)|int }}%
+                {% else %}
+                  0%
+                {% endif %}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROJECT PROGRESS (MATCHING DESIGN) -->
+        <div class="content-card">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Parking Progress</h3>
+          
+          <div class="relative">
+            <!-- Circular Progress -->
+            <div class="relative w-48 h-48 mx-auto mb-6">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <!-- Background circle -->
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#E5E7EB" stroke-width="8" class="dark:stroke-gray-700"></circle>
+                
+                <!-- Progress circle -->
+                {% set occupancy_percentage = ((slots|selectattr('status', 'equalto', 'Occupied')|list|length / slots|length) * 100)|int if slots|length > 0 else 0 %}
+                <circle 
+                  cx="50" cy="50" r="40" 
+                  fill="none" 
+                  stroke="url(#gradient)" 
+                  stroke-width="8" 
+                  stroke-linecap="round"
+                  stroke-dasharray="251.2"
+                  stroke-dashoffset="{{ 251.2 - (251.2 * occupancy_percentage / 100) }}"
+                  class="transition-all duration-1000"
+                ></circle>
+                
+                <!-- Gradient definition -->
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#15803d;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              
+              <!-- Center text -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-4xl font-bold text-gray-900 dark:text-white">{{ occupancy_percentage }}%</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400">Parked</span>
+              </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center gap-2">
+                  <div class="w-3 h-3 bg-green-600 rounded-full"></div>
+                  <span class="text-gray-600 dark:text-gray-400">Occupied</span>
+                </div>
+                <span class="font-semibold text-gray-900 dark:text-white">{{ slots|selectattr('status', 'equalto', 'Occupied')|list|length }}</span>
+              </div>
+              
+              <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center gap-2">
+                  <div class="w-3 h-3 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                  <span class="text-gray-600 dark:text-gray-400">Available</span>
+                </div>
+                <span class="font-semibold text-gray-900 dark:text-white">{{ slots|selectattr('status', 'equalto', 'Available')|list|length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="content-card">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h3>
+          
+          <div class="space-y-2">
+            <a href="/vehicle-entry" class="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl transition-colors group">
+              <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-arrow-right-to-bracket text-white"></i>
+              </div>
+              <span class="font-medium text-green-700 dark:text-green-300">Vehicle Entry</span>
+            </a>
+
+            <a href="/vehicle-exit" class="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl transition-colors group">
+              <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-arrow-right-from-bracket text-white"></i>
+              </div>
+              <span class="font-medium text-green-700 dark:text-green-300">Vehicle Exit</span>
+            </a>
+
+            <a href="/payments" class="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl transition-colors group">
+              <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-credit-card text-white"></i>
+              </div>
+              <span class="font-medium text-green-700 dark:text-green-300">View Payments</span>
+            </a>
           </div>
         </div>
       </aside>
@@ -321,54 +632,16 @@
 
 <!-- SCRIPTS -->
 <script>
-// Theme Toggle Functionality
-function toggleTheme() {
-  const html = document.documentElement;
-  const themeIcon = document.getElementById('themeIcon');
-  
-  // Toggle dark class on html element
-  html.classList.toggle('dark');
-  
-  // Update icon
-  if (html.classList.contains('dark')) {
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    themeIcon.classList.remove('fa-sun');
-    themeIcon.classList.add('fa-moon');
-    localStorage.setItem('theme', 'light');
-  }
-}
-
-// Load saved theme on page load - must run immediately, not in DOMContentLoaded
+// Force dark mode initialization
 (function() {
-  const savedTheme = localStorage.getItem('theme') || 'light';
   const html = document.documentElement;
-  
-  if (savedTheme === 'dark') {
-    html.classList.add('dark');
-  } else {
-    html.classList.remove('dark');
-  }
+  html.classList.add('dark');
+  localStorage.setItem('theme', 'dark');
 })();
 
-// Update icon after DOM loads
+// Initialize on DOM load
 document.addEventListener('DOMContentLoaded', function() {
-  const html = document.documentElement;
-  const themeIcon = document.getElementById('themeIcon');
-  
-  if (html.classList.contains('dark')) {
-    if (themeIcon) {
-      themeIcon.classList.remove('fa-moon');
-      themeIcon.classList.add('fa-sun');
-    }
-  } else {
-    if (themeIcon) {
-      themeIcon.classList.remove('fa-sun');
-      themeIcon.classList.add('fa-moon');
-    }
-  }
+  document.documentElement.classList.add('dark');
   
   // Initialize filter
   filterRecords();
@@ -379,9 +652,33 @@ function toggleProfile() {
   document.getElementById("profileMenu").classList.toggle("hidden");
 }
 
+/* MOBILE MENU TOGGLE */
+function toggleMobileMenu() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
+  
+  sidebar.classList.toggle("show");
+  overlay.classList.toggle("show");
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
+  const menuBtn = document.getElementById("mobileMenuBtn");
+  
+  if (overlay && overlay.classList.contains('show') && !sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
+  }
+});
+
 /* FILTER AND SEARCH RECORDS */
 function filterRecords() {
-  const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+  const globalSearch = document.getElementById("globalSearch");
+  const recordsSearch = document.getElementById("searchInput");
+  const activeSearch = globalSearch && globalSearch.value.trim().length > 0 ? globalSearch : recordsSearch;
+  const searchTerm = activeSearch ? activeSearch.value.toLowerCase() : "";
   const filterValue = document.getElementById("filterSelect").value;
   const cards = document.querySelectorAll(".vehicle-card");
   let visibleCount = 0;

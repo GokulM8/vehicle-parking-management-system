@@ -5,77 +5,158 @@
   <title>VPMS | Vehicle Exit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <!-- Tailwind with Dark Mode Configuration -->
   <script>
     tailwind.config = {
       darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Font Awesome -->
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Custom Dashboard CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 
   <!-- QR Code Library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+<body class="text-gray-900 dark:text-gray-100 overflow-x-hidden">
+
+<!-- Mobile Overlay -->
+<div id="mobileOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="flex min-h-screen">
 
   <!-- SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-gray-800 shadow-md p-6 flex flex-col h-screen sticky top-0 transition-colors">
-    <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-8">VPMS</h2>
+  <aside id="sidebar" class="w-64 lg:w-72 p-4 lg:p-6 flex flex-col h-screen sticky top-0">
+    <!-- Close button for mobile -->
+    <button onclick="toggleMobileMenu()" class="lg:hidden absolute top-4 right-4 p-2 rounded-lg">
+      <i class="fa-solid fa-times text-gray-700 dark:text-gray-300"></i>
+    </button>
 
-    <nav class="flex-1 space-y-2">
-      <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-chart-line"></i> Dashboard
+    <!-- Logo -->
+    <div class="mb-6 lg:mb-8">
+      <div class="flex items-center gap-3">
+        <div class="logo-circle">
+          <i class="fa-solid fa-parking text-white text-xl"></i>
+        </div>
+        <h2 class="text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">VPMS</h2>
+      </div>
+    </div>
+
+    <!-- MENU Label -->
+    <p class="menu-label">Menu</p>
+
+    <nav class="flex-1 overflow-y-auto">
+      <a href="/dashboard" class="menu-item">
+        <i class="fa-solid fa-th-large"></i>
+        <span>Dashboard</span>
       </a>
-
-      <a href="/payments" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-credit-card"></i> Payments
+      <a href="/payments" class="menu-item">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Payments</span>
       </a>
-
-      <a href="/vehicle-entry" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Vehicle Entry
+      <a href="/vehicle-entry" class="menu-item">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        <span>Vehicle Entry</span>
       </a>
-
-      <a href="/vehicle-exit" class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i> Vehicle Exit
+      <a href="/vehicle-exit" class="menu-item active">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Vehicle Exit</span>
+      </a>
+      <a href="/profile" class="menu-item">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
       </a>
     </nav>
 
-    <a href="/logout" class="flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg">
-      <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
+    <!-- GENERAL Label -->
+    <p class="menu-label">General</p>
+
+    <div>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-cog"></i>
+        <span>Settings</span>
+      </a>
+      <a href="/logout" class="menu-item text-red-600 dark:text-red-400">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 p-8">
+  <!-- MAIN -->
+  <main class="main-content">
+    <!-- HEADER BAR -->
+    <div class="dashboard-header">
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden header-icon">
+        <i class="fa-solid fa-bars"></i>
+      </button>
 
-    <!-- HEADER -->
-    <div class="mb-8 flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold dark:text-white">Vehicle Exit</h1>
-        <p class="text-gray-500 dark:text-gray-400">
-          Complete parking and calculate exit fee
-        </p>
+      <!-- Search Bar -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search vehicles..." id="globalSearch">
       </div>
 
-      <!-- THEME TOGGLE -->
-      <button 
-        id="themeToggle"
-        onclick="toggleTheme()"
-        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-        title="Toggle theme"
-      >
-        <i id="themeIcon" class="fa-solid fa-moon text-gray-700 dark:text-gray-300"></i>
-      </button>
+      <!-- RIGHT ACTIONS -->
+      <div class="header-icons">
+        <!-- Notifications -->
+        <button class="header-icon relative">
+          <i class="fa-solid fa-bell"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+
+        <!-- Profile -->
+        <div class="relative">
+          <button onclick="toggleProfile()" class="user-profile">
+            <img src="https://ui-avatars.com/api/?name=User&background=16a34a&color=fff" alt="Profile" class="user-avatar">
+            <div class="hidden lg:block text-left">
+              <p class="text-sm font-semibold text-gray-900 dark:text-white">User</p>
+            </div>
+            <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
+          </button>
+
+          <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 sm:w-56 content-card shadow-2xl z-50">
+            <a href="/profile" class="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-user-pen"></i>
+              <span class="text-sm">Edit Profile</span>
+            </a>
+            <a href="/logout" class="flex items-center gap-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span class="text-sm">Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE TITLE -->
+    <div class="page-title-section">
+      <div>
+        <h1 class="page-title">Vehicle Exit</h1>
+        <p class="page-subtitle">Complete parking and calculate exit fee.</p>
+      </div>
     </div>
 
     <!-- EXIT FORM / RESULT -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-8 max-w-xl transition-colors">
+    <div class="content-card max-w-2xl">
 
       <!-- ERROR MESSAGE -->
       {% if error %}
@@ -239,12 +320,21 @@
 </div>
 
 <script>
+// Force dark mode initialization
+(function() {
+  const html = document.documentElement;
+  html.classList.add('dark');
+  localStorage.setItem('theme', 'dark');
+})();
+
 let calculatedFee = 0;
 let vehicleInfo = null;
 let userUPIId = null;
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+  // Ensure dark mode
+  document.documentElement.classList.add('dark');
   // Handle form submission
   const processBtn = document.getElementById('processBtn');
   if (processBtn) {
@@ -494,6 +584,32 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.add('hidden');
       }
     });
+  }
+});
+
+/* PROFILE MENU */
+function toggleProfile() {
+  document.getElementById("profileMenu").classList.toggle("hidden");
+}
+
+/* MOBILE MENU TOGGLE */
+function toggleMobileMenu() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
+  
+  sidebar.classList.toggle("show");
+  overlay.classList.toggle("show");
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
+  const menuBtn = document.getElementById("mobileMenuBtn");
+  
+  if (overlay && overlay.classList.contains('show') && !sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
   }
 });
 </script>

@@ -18,41 +18,11 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
-  <style>
-    /* Ensure links are clickable on mobile */
-    a {
-      -webkit-tap-highlight-color: rgba(59, 130, 246, 0.3);
-      touch-action: manipulation;
-      cursor: pointer;
-    }
-    
-    /* Ensure buttons are clickable */
-    button {
-      -webkit-tap-highlight-color: rgba(59, 130, 246, 0.3);
-      touch-action: manipulation;
-      cursor: pointer;
-    }
-    
-    /* Prevent fixed button from blocking content */
-    #themeToggle {
-      pointer-events: auto;
-      touch-action: manipulation;
-    }
-  </style>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center transition-colors">
-
-  <!-- Theme Toggle Button (Fixed Position) -->
-  <button 
-    id="themeToggle"
-    onclick="toggleTheme()"
-    class="fixed top-4 right-4 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 transition-colors z-50 touch-manipulation"
-    title="Toggle theme"
-    type="button"
-  >
-    <i id="themeIcon" class="fa-solid fa-moon text-gray-700 dark:text-gray-300"></i>
-  </button>
 
   <!-- Login Card -->
   <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors mx-4">
@@ -135,50 +105,52 @@
 <script>
 // Theme initialization - must run before page renders
 (function() {
-  const savedTheme = localStorage.getItem('theme') || 'light';
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
   const html = document.documentElement;
-  if (savedTheme === 'dark') {
+  
+  if (isDark) {
     html.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    html.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }
+  
+  // Update icon immediately
+  const themeIcon = document.getElementById('themeIcon');
+  if (themeIcon) {
+    if (isDark) {
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+    } else {
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
+    }
   }
 })();
 
 // Theme Toggle Functionality
-function toggleTheme() {
-  const html = document.documentElement;
-  const themeIcon = document.getElementById('themeIcon');
-  
-  html.classList.toggle('dark');
-  
-  if (html.classList.contains('dark')) {
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    themeIcon.classList.remove('fa-sun');
-    themeIcon.classList.add('fa-moon');
-    localStorage.setItem('theme', 'light');
+function toggleTheme(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
   }
   
-  // Prevent event bubbling
-  event.stopPropagation();
-  return false;
-}
+<!-- Force Dark Mode Script -->
+<script>
+// Force dark mode initialization
+(function() {
+  const html = document.documentElement;
+  html.classList.add('dark');
+  localStorage.setItem('theme', 'dark');
+})();
 
-// Update icon after DOM loads
+// Ensure dark mode on DOM load
 document.addEventListener('DOMContentLoaded', function() {
-  const html = document.documentElement;
-  const themeIcon = document.getElementById('themeIcon');
-  
-  if (html.classList.contains('dark') && themeIcon) {
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-  }
+  document.documentElement.classList.add('dark');
 });
-
-// Ensure links work on mobile - prevent any interference
-document.addEventListener('touchstart', function(e) {
-  // Allow all touch events to propagate normally
-}, { passive: true });
 </script>
 
 </body>

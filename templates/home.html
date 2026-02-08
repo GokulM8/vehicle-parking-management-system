@@ -5,15 +5,25 @@
   <title>VPMS | Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Tailwind -->
+  <!-- Tailwind with Dark Mode Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Theme CSS & JS (same as dashboard) -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
-  <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
 </head>
 
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+
+<script>
+// Force dark mode initialization
+(function() {
+  const html = document.documentElement;
+  html.classList.add('dark');
+  localStorage.setItem('theme', 'dark');
+})();
+</script>
 
 <!-- CENTER CONTAINER -->
 <div class="min-h-screen flex flex-col items-center justify-center px-4">
@@ -55,24 +65,6 @@
   </div>
 
 </div>
-
-<!-- FADE ANIMATION -->
-<style>
-  .animate-fade {
-    animation: fadeUp 0.6s ease;
-  }
-
-  @keyframes fadeUp {
-    from {
-      opacity: 0;
-      transform: translateY(15px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>
 
 </body>
 </html>

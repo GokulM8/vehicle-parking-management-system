@@ -5,108 +5,201 @@
   <title>VPMS | Payments</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <!-- Tailwind with Dark Mode Configuration -->
   <script>
     tailwind.config = {
       darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Font Awesome -->
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Custom Dashboard CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+<body class="text-gray-900 dark:text-gray-100 overflow-x-hidden">
+
+<!-- Mobile Overlay -->
+<div id="mobileOverlay" onclick="toggleMobileMenu()"></div>
 
 <div class="flex min-h-screen">
 
   <!-- SIDEBAR -->
-  <aside class="w-64 bg-white dark:bg-gray-800 shadow-md p-6 flex flex-col h-screen sticky top-0 transition-colors">
-    <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-8">VPMS</h2>
+  <aside id="sidebar" class="w-64 lg:w-72 p-4 lg:p-6 flex flex-col h-screen sticky top-0">
+    <!-- Close button for mobile -->
+    <button onclick="toggleMobileMenu()" class="lg:hidden absolute top-4 right-4 p-2 rounded-lg">
+      <i class="fa-solid fa-times text-gray-700 dark:text-gray-300"></i>
+    </button>
 
-    <nav class="flex-1 space-y-2">
-      <a href="/dashboard" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-chart-line"></i> Dashboard
+    <!-- Logo -->
+    <div class="mb-6 lg:mb-8">
+      <div class="flex items-center gap-3">
+        <div class="logo-circle">
+          <i class="fa-solid fa-parking text-white text-xl"></i>
+        </div>
+        <h2 class="text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">VPMS</h2>
+      </div>
+    </div>
+
+    <!-- MENU Label -->
+    <p class="menu-label">Menu</p>
+
+    <nav class="flex-1 overflow-y-auto">
+      <a href="/dashboard" class="menu-item">
+        <i class="fa-solid fa-th-large"></i>
+        <span>Dashboard</span>
       </a>
-
-      <a href="/payments" class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
-        <i class="fa-solid fa-credit-card"></i> Payments
+      <a href="/payments" class="menu-item active">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Payments</span>
       </a>
-
-      <a href="/vehicle-entry" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Vehicle Entry
+      <a href="/vehicle-entry" class="menu-item">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        <span>Vehicle Entry</span>
       </a>
-
-      <a href="/vehicle-exit" class="flex items-center gap-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i> Vehicle Exit
+      <a href="/vehicle-exit" class="menu-item">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Vehicle Exit</span>
+      </a>
+      <a href="/profile" class="menu-item">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
       </a>
     </nav>
 
-    <a href="/logout" class="flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg">
-      <i class="fa-solid fa-right-from-bracket"></i> Logout
-    </a>
+    <!-- GENERAL Label -->
+    <p class="menu-label">General</p>
+
+    <div>
+      <a href="#" class="menu-item">
+        <i class="fa-solid fa-cog"></i>
+        <span>Settings</span>
+      </a>
+      <a href="/logout" class="menu-item text-red-600 dark:text-red-400">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 p-8">
-    <!-- HEADER -->
-    <div class="mb-8 flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold dark:text-white">Payments Overview</h1>
-        <p class="text-gray-500 dark:text-gray-400">
-          Detailed payment records and transaction history
-        </p>
+  <!-- MAIN -->
+  <main class="main-content">
+    <!-- HEADER BAR -->
+    <div class="dashboard-header">
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden header-icon">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Search Bar -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search vehicles..." id="globalSearch">
       </div>
 
-      <!-- THEME TOGGLE -->
-      <button 
-        id="themeToggle"
-        onclick="toggleTheme()"
-        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-        title="Toggle theme"
-      >
-        <i id="themeIcon" class="fa-solid fa-moon text-gray-700 dark:text-gray-300"></i>
-      </button>
+      <!-- RIGHT ACTIONS -->
+      <div class="header-icons">
+        <!-- Notifications -->
+        <button class="header-icon relative">
+          <i class="fa-solid fa-bell"></i>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+
+        <!-- Profile -->
+        <div class="relative">
+          <button onclick="toggleProfile()" class="user-profile">
+            <img src="https://ui-avatars.com/api/?name=User&background=16a34a&color=fff" alt="Profile" class="user-avatar">
+            <div class="hidden lg:block text-left">
+              <p class="text-sm font-semibold text-gray-900 dark:text-white">User</p>
+            </div>
+            <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
+          </button>
+
+          <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 sm:w-56 content-card shadow-2xl z-50">
+            <a href="/profile" class="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-user-pen"></i>
+              <span class="text-sm">Edit Profile</span>
+            </a>
+            <a href="/logout" class="flex items-center gap-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span class="text-sm">Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PAGE TITLE -->
+    <div class="page-title-section">
+      <div>
+        <h1 class="page-title">Payments Overview</h1>
+        <p class="page-subtitle">Detailed payment records and transaction history.</p>
+      </div>
     </div>
 
     <!-- SUMMARY CARDS -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="stat-cards-grid mb-6">
       <!-- AMOUNT COLLECTED -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 transition-colors">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg flex items-center justify-center">
-            <i class="fa-solid fa-check-circle"></i>
-          </div>
+      <div class="stat-card-green">
+        <div class="stat-card-header">
           <div>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Amount Collected</p>
-            <h2 class="text-3xl font-bold dark:text-white">₹ {{ collected }}</h2>
+            <p class="stat-label">Amount Collected</p>
+            <p class="stat-number">₹{{ collected }}</p>
+            <p class="stat-change">
+              <i class="fa-solid fa-arrow-up"></i>
+              Total earnings
+            </p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-wallet"></i>
           </div>
         </div>
       </div>
 
       <!-- AMOUNT TO BE COLLECTED -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 transition-colors">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg flex items-center justify-center">
-            <i class="fa-solid fa-clock"></i>
-          </div>
+      <div class="stat-card-white">
+        <div class="stat-card-header">
           <div>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Amount To Be Collected</p>
-            <h2 class="text-3xl font-bold dark:text-white">₹ {{ to_be_collected }}</h2>
+            <p class="stat-label">To Be Collected</p>
+            <p class="stat-number" style="color: #f97316;">₹{{ to_be_collected }}</p>
+            <p class="stat-change">
+              <i class="fa-solid fa-clock" style="color: #f97316;"></i>
+              Pending payments
+            </p>
+          </div>
+          <div class="stat-icon-wrapper" style="background: #fed7aa;">
+            <i class="fa-solid fa-clock" style="color: #f97316;"></i>
           </div>
         </div>
       </div>
 
       <!-- TOTAL AMOUNT -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 transition-colors">
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg flex items-center justify-center">
-            <i class="fa-solid fa-indian-rupee-sign"></i>
-          </div>
+      <div class="stat-card-white">
+        <div class="stat-card-header">
           <div>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Total Amount</p>
-            <h2 class="text-3xl font-bold dark:text-white">₹ {{ total_amount }}</h2>
+            <p class="stat-label">Total Amount</p>
+            <p class="stat-number">₹{{ total_amount }}</p>
+            <p class="stat-change">
+              <i class="fa-solid fa-receipt"></i>
+              All transactions
+            </p>
+          </div>
+          <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-receipt"></i>
           </div>
         </div>
       </div>
@@ -114,29 +207,29 @@
 
     <!-- PAYMENT PLATFORM STATISTICS -->
     {% if platform_stats %}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mb-8 transition-colors">
-      <h2 class="text-xl font-bold dark:text-white mb-4">Payment Platform Breakdown</h2>
+    <div class="content-card mb-6">
+      <h2 class="card-title mb-6">Payment Platform Breakdown</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {% for stat in platform_stats %}
-        <div class="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg text-center transition-colors">
-          <div class="text-2xl mb-2">
+        <div class="p-4 bg-gray-700/50 hover:bg-gray-700/70 border border-gray-600/50 rounded-xl text-center transition-all duration-200 hover:scale-105 hover:shadow-lg">
+          <div class="text-3xl mb-3">
             {% if stat.payment_platform == 'Cash' %}
-              <i class="fa-solid fa-money-bill-wave text-green-600 dark:text-green-400"></i>
+              <i class="fa-solid fa-money-bill-wave text-green-400"></i>
             {% elif stat.payment_platform == 'UPI' %}
-              <i class="fa-solid fa-mobile-screen-button text-purple-600 dark:text-purple-400"></i>
+              <i class="fa-solid fa-mobile-screen-button text-purple-400"></i>
             {% elif 'Card' in stat.payment_platform %}
-              <i class="fa-solid fa-credit-card text-blue-600 dark:text-blue-400"></i>
+              <i class="fa-solid fa-credit-card text-blue-400"></i>
             {% elif stat.payment_platform == 'Net Banking' %}
-              <i class="fa-solid fa-building-columns text-indigo-600 dark:text-indigo-400"></i>
+              <i class="fa-solid fa-building-columns text-indigo-400"></i>
             {% elif stat.payment_platform == 'Wallet' %}
-              <i class="fa-solid fa-wallet text-orange-600 dark:text-orange-400"></i>
+              <i class="fa-solid fa-wallet text-orange-400"></i>
             {% else %}
-              <i class="fa-solid fa-money-bill text-gray-600 dark:text-gray-400"></i>
+              <i class="fa-solid fa-money-bill text-gray-400"></i>
             {% endif %}
           </div>
-          <p class="font-semibold text-sm text-gray-700 dark:text-gray-300">{{ stat.payment_platform }}</p>
-          <p class="text-lg font-bold text-blue-700 dark:text-blue-300">₹ {{ stat.total }}</p>
-          <p class="text-xs text-gray-500 dark:text-gray-400">{{ stat.count }} transactions</p>
+          <p class="font-semibold text-sm text-gray-300 mb-2">{{ stat.payment_platform }}</p>
+          <p class="text-2xl font-bold text-white mb-1">₹{{ stat.total }}</p>
+          <p class="text-xs text-gray-400">{{ stat.count }} transactions</p>
         </div>
         {% endfor %}
       </div>
@@ -144,9 +237,9 @@
     {% endif %}
 
     <!-- PAYMENT RECORDS TABLE -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 transition-colors">
+    <div class="content-card">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-bold dark:text-white">Payment Records</h2>
+        <h2 class="card-title">Payment Records</h2>
         <div class="flex items-center gap-3">
           <input 
             type="text" 
@@ -259,32 +352,34 @@ function filterPayments() {
   }
 })();
 
-// Theme Toggle Functionality
-function toggleTheme() {
-  const html = document.documentElement;
-  const themeIcon = document.getElementById('themeIcon');
-  
-  html.classList.toggle('dark');
-  
-  if (html.classList.contains('dark')) {
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    themeIcon.classList.remove('fa-sun');
-    themeIcon.classList.add('fa-moon');
-    localStorage.setItem('theme', 'light');
-  }
+// Ensure dark mode on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+  document.documentElement.classList.add('dark');
+});
+
+/* PROFILE MENU */
+function toggleProfile() {
+  document.getElementById("profileMenu").classList.toggle("hidden");
 }
 
-// Update icon after DOM loads
-document.addEventListener('DOMContentLoaded', function() {
-  const html = document.documentElement;
-  const themeIcon = document.getElementById('themeIcon');
+/* MOBILE MENU TOGGLE */
+function toggleMobileMenu() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
   
-  if (html.classList.contains('dark') && themeIcon) {
-    themeIcon.classList.remove('fa-moon');
-    themeIcon.classList.add('fa-sun');
+  sidebar.classList.toggle("show");
+  overlay.classList.toggle("show");
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
+  const menuBtn = document.getElementById("mobileMenuBtn");
+  
+  if (overlay && overlay.classList.contains('show') && !sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
   }
 });
 </script>
