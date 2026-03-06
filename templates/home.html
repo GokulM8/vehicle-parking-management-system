@@ -2,69 +2,267 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>VPMS | Home</title>
+  <title>VPMS | Vehicle Parking Management System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Tailwind with Dark Mode Configuration -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
-  </script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    
+    .hero-gradient {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .glow-effect {
+      box-shadow: 0 0 40px rgba(124, 131, 255, 0.3);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .float-animation {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .feature-card {
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(124, 131, 255, 0.2);
+    }
+  </style>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+<body class="bg-slate-900 text-white min-h-screen">
 
-<script>
-// Force dark mode initialization
-(function() {
-  const html = document.documentElement;
-  html.classList.add('dark');
-  localStorage.setItem('theme', 'dark');
-})();
-</script>
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-slate-900/80 border-b border-slate-800">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center">
+          <i class="fa-solid fa-parking text-lg"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-wide">VPMS</h1>
+          <p class="text-xs text-slate-400">Smart Parking Solutions</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="{{ url_for('login') }}" class="hidden sm:inline-block text-sm text-slate-300 hover:text-white transition">Sign In</a>
+        <a href="{{ url_for('register') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm font-medium transition">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
 
-<!-- CENTER CONTAINER -->
-<div class="min-h-screen flex flex-col items-center justify-center px-4">
+<!-- Hero Section -->
+<section class="hero-gradient pt-32 pb-20 px-6 lg:px-10">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <!-- Left Column -->
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-medium mb-6">
+          <i class="fa-solid fa-star"></i>
+          <span>Modern Parking Management</span>
+        </div>
+        
+        <h1 class="text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+          Manage parking
+          <span class="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+            without chaos
+          </span>
+        </h1>
+        
+        <p class="text-lg text-slate-300 mb-8 max-w-xl">
+          Streamline vehicle entries, exits, occupancy tracking, and payments from one powerful dashboard. Built for speed, clarity, and control.
+        </p>
 
-  <!-- APP TITLE -->
-  <h1 class="text-4xl font-bold text-blue-600 mb-3">
-    VPMS
-  </h1>
+        <div class="flex flex-wrap gap-4 mb-8">
+          <a href="{{ url_for('login') }}" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition flex items-center gap-2">
+            <span>Access Dashboard</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a href="{{ url_for('register') }}" class="px-6 py-3 border border-slate-600 hover:border-slate-500 rounded-lg font-semibold transition">
+            Create Account
+          </a>
+        </div>
 
-  <!-- SUBTITLE -->
-  <p class="text-center text-gray-600 dark:text-gray-400 mb-10 max-w-md">
-    Vehicle Parking Management System to manage slots, vehicles,
-    and parking operations efficiently.
-  </p>
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-6">
+          <div>
+            <p class="text-3xl font-bold text-indigo-400">24/7</p>
+            <p class="text-sm text-slate-400">Operations</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-indigo-400">Live</p>
+            <p class="text-sm text-slate-400">Tracking</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-indigo-400">Fast</p>
+            <p class="text-sm text-slate-400">Payments</p>
+          </div>
+        </div>
+      </div>
 
-  <!-- ACTION BUTTONS -->
-  <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-8 w-full max-w-sm
-              animate-fade">
+      <!-- Right Column - Dashboard Preview -->
+      <div class="relative float-animation">
+        <div class="glass rounded-2xl p-6 glow-effect">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold">Live Dashboard</h3>
+            <div class="flex gap-2">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <div class="glass rounded-lg p-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm text-slate-300">Total Slots</span>
+                <span class="text-2xl font-bold">50</span>
+              </div>
+              <div class="w-full bg-slate-700 rounded-full h-2">
+                <div class="bg-indigo-500 h-2 rounded-full" style="width: 65%"></div>
+              </div>
+            </div>
+            <div class="glass rounded-lg p-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-300">Available</span>
+                <span class="text-2xl font-bold text-green-400">18</span>
+              </div>
+            </div>
+            <div class="glass rounded-lg p-4">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-slate-300">Occupied</span>
+                <span class="text-2xl font-bold text-orange-400">32</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <div class="flex flex-col gap-4">
-
-      <!-- LOGIN -->
-      <a href="{{ url_for('login') }}"
-         class="bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-lg
-                font-semibold transition duration-200">
-        Admin Login
-      </a>
-
-      <!-- REGISTER -->
-      <a href="{{ url_for('register') }}"
-         class="border border-blue-600 text-blue-600 dark:text-blue-400
-                hover:bg-blue-600 hover:text-white text-center py-3 rounded-lg
-                font-semibold transition duration-200">
-        Admin Register
-      </a>
-
+<!-- Features Section -->
+<section class="py-20 px-6 lg:px-10 bg-slate-800/50">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold mb-4">Powerful Features</h2>
+      <p class="text-slate-400 max-w-2xl mx-auto">Everything you need to run a modern parking facility efficiently</p>
     </div>
 
-  </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <div class="feature-card glass rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-4">
+          <i class="fa-solid fa-car text-indigo-400 text-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Vehicle Management</h3>
+        <p class="text-slate-400">Quick entry and exit processing with automated slot allocation and tracking.</p>
+      </div>
 
-</div>
+      <!-- Feature 2 -->
+      <div class="feature-card glass rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center mb-4">
+          <i class="fa-solid fa-credit-card text-green-400 text-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Payment Processing</h3>
+        <p class="text-slate-400">Support for multiple payment methods including UPI, cash, and credit cards.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card glass rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4">
+          <i class="fa-solid fa-chart-line text-purple-400 text-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Analytics & Reports</h3>
+        <p class="text-slate-400">Real-time insights and detailed reports on occupancy, revenue, and operations.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card glass rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-lg bg-yellow-500/20 flex items-center justify-center mb-4">
+          <i class="fa-solid fa-bell text-yellow-400 text-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Smart Notifications</h3>
+        <p class="text-slate-400">Instant alerts for entries, exits, payments, and system events.</p>
+      </div>
+
+      <!-- Feature 5 -->
+      <div class="feature-card glass rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center mb-4">
+          <i class="fa-solid fa-search text-red-400 text-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Advanced Search</h3>
+        <p class="text-slate-400">Quick search and filter across all vehicles, payments, and records.</p>
+      </div>
+
+      <!-- Feature 6 -->
+      <div class="feature-card glass rounded-2xl p-6">
+        <div class="w-12 h-12 rounded-lg bg-cyan-500/20 flex items-center justify-center mb-4">
+          <i class="fa-solid fa-file-export text-cyan-400 text-xl"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-2">Data Export</h3>
+        <p class="text-slate-400">Export comprehensive reports in CSV format for external analysis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 px-6 lg:px-10">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="glass rounded-3xl p-12">
+      <h2 class="text-4xl font-bold mb-4">Ready to get started?</h2>
+      <p class="text-slate-300 mb-8 text-lg">Join modern parking facilities using VPMS for efficient operations.</p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="{{ url_for('register') }}" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition text-lg">
+          Create Free Account
+        </a>
+        <a href="{{ url_for('login') }}" class="px-8 py-4 border border-slate-600 hover:border-slate-500 rounded-lg font-semibold transition text-lg">
+          Sign In
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="border-t border-slate-800 py-8 px-6 lg:px-10">
+  <div class="max-w-7xl mx-auto text-center">
+    <div class="flex items-center justify-center gap-3 mb-4">
+      <div class="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center">
+        <i class="fa-solid fa-parking"></i>
+      </div>
+      <span class="font-bold">VPMS</span>
+    </div>
+    <p class="text-slate-400 text-sm">© 2026 Vehicle Parking Management System. All rights reserved.</p>
+  </div>
+</footer>
 
 </body>
 </html>

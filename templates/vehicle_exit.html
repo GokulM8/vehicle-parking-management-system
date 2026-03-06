@@ -8,7 +8,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Tailwind with Dark Mode Configuration -->
   <script>
@@ -17,7 +17,7 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Poppins', 'system-ui', 'sans-serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
           },
         },
       },
@@ -30,12 +30,13 @@
   
   <!-- Custom Dashboard CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/redesign.css') }}">
 
   <!-- QR Code Library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 </head>
 
-<body class="text-gray-900 dark:text-gray-100 overflow-x-hidden">
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-950 text-slate-100" style="font-family: Inter, system-ui, sans-serif;">
 
 <!-- Mobile Overlay -->
 <div id="mobileOverlay" onclick="toggleMobileMenu()"></div>
@@ -89,7 +90,7 @@
     <p class="menu-label">General</p>
 
     <div>
-      <a href="#" class="menu-item">
+      <a href="/settings" class="menu-item">
         <i class="fa-solid fa-cog"></i>
         <span>Settings</span>
       </a>
@@ -112,23 +113,35 @@
       <!-- Search Bar -->
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" placeholder="Search vehicles..." id="globalSearch">
+        <input type="text" placeholder="Search vehicles..." id="globalSearch" onkeypress="handleSearch(event)">
       </div>
 
       <!-- RIGHT ACTIONS -->
       <div class="header-icons">
         <!-- Notifications -->
-        <button class="header-icon relative">
-          <i class="fa-solid fa-bell"></i>
-          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-        </button>
+        <div class="relative">
+          <button class="notification-btn header-icon" onclick="toggleNotifications()">
+            <i class="fa-solid fa-bell"></i>
+            <span id="notification-badge"></span>
+          </button>
+          
+          <!-- Notification Dropdown -->
+          <div id="notification-dropdown">
+            <div class="p-8 text-center text-gray-400">
+              <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              <p>Loading notifications...</p>
+            </div>
+          </div>
+        </div>
 
         <!-- Profile -->
         <div class="relative">
           <button onclick="toggleProfile()" class="user-profile">
-            <img src="https://ui-avatars.com/api/?name=User&background=16a34a&color=fff" alt="Profile" class="user-avatar">
+            <img src="https://ui-avatars.com/api/?name={{ session.get('username', 'Admin') }}&background=16a34a&color=fff" alt="Profile" class="user-avatar">
             <div class="hidden lg:block text-left">
-              <p class="text-sm font-semibold text-gray-900 dark:text-white">User</p>
+              <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ session.get('username', 'Admin') }}</p>
             </div>
             <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
           </button>
@@ -592,6 +605,16 @@ function toggleProfile() {
   document.getElementById("profileMenu").classList.toggle("hidden");
 }
 
+/* SEARCH REDIRECT */
+function handleSearch(event) {
+  if (event.key === 'Enter') {
+    const searchTerm = document.getElementById('globalSearch').value;
+    if (searchTerm.trim()) {
+      window.location.href = `/dashboard?search=${encodeURIComponent(searchTerm)}`;
+    }
+  }
+}
+
 /* MOBILE MENU TOGGLE */
 function toggleMobileMenu() {
   const sidebar = document.getElementById("sidebar");
@@ -613,6 +636,9 @@ document.addEventListener('click', function(event) {
   }
 });
 </script>
+
+<!-- Notification System -->
+<script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
 
 </body>
 </html>

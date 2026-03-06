@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VPMS | Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Custom Dashboard CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/redesign.css') }}">
+  
+  <style>
+    /* Fix checkbox styling in dark mode */
+    input[type="checkbox"] {
+      accent-color: #16a34a;
+      cursor: pointer;
+    }
+    
+    /* Ensure proper styling for number inputs */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-950 text-slate-100" style="font-family: Inter, system-ui, sans-serif;">
+
+<!-- Mobile Overlay -->
+<div id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+
+<div class="flex min-h-screen">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="w-64 lg:w-72 p-4 lg:p-6 flex flex-col h-screen sticky top-0">
+    <!-- Close button for mobile -->
+    <button onclick="toggleMobileMenu()" class="lg:hidden absolute top-4 right-4 p-2 rounded-lg">
+      <i class="fa-solid fa-times text-gray-700 dark:text-gray-300"></i>
+    </button>
+
+    <!-- Logo -->
+    <div class="mb-6 lg:mb-8">
+      <div class="flex items-center gap-3">
+        <div class="logo-circle">
+          <i class="fa-solid fa-parking text-white text-xl"></i>
+        </div>
+        <h2 class="text-xl lg:text-2xl font-bold text-gray-800 dark:text-white">VPMS</h2>
+      </div>
+    </div>
+
+    <!-- MENU Label -->
+    <p class="menu-label">Menu</p>
+
+    <nav class="flex-1 overflow-y-auto">
+      <a href="/dashboard" class="menu-item">
+        <i class="fa-solid fa-th-large"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="/payments" class="menu-item">
+        <i class="fa-solid fa-credit-card"></i>
+        <span>Payments</span>
+      </a>
+      <a href="/vehicle-entry" class="menu-item">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        <span>Vehicle Entry</span>
+      </a>
+      <a href="/vehicle-exit" class="menu-item">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span>Vehicle Exit</span>
+      </a>
+      <a href="/profile" class="menu-item">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+    <!-- GENERAL Label -->
+    <p class="menu-label">General</p>
+
+    <div>
+      <a href="/settings" class="menu-item active">
+        <i class="fa-solid fa-cog"></i>
+        <span>Settings</span>
+      </a>
+      <a href="/logout" class="menu-item text-red-600 dark:text-red-400">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <!-- HEADER BAR -->
+    <div class="dashboard-header">
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden header-icon">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Search Bar -->
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search settings..." disabled>
+      </div>
+
+      <!-- RIGHT ACTIONS -->
+      <div class="header-icons">
+        <!-- Notifications -->
+        <div class="relative">
+          <button class="notification-btn header-icon" onclick="toggleNotifications()">
+            <i class="fa-solid fa-bell"></i>
+            <span id="notification-badge"></span>
+          </button>
+          
+          <!-- Notification Dropdown -->
+          <div id="notification-dropdown">
+            <div class="p-8 text-center text-gray-400">
+              <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              <p>Loading notifications...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile -->
+        <div class="relative">
+          <button onclick="toggleProfile()" class="user-profile">
+            <img src="https://ui-avatars.com/api/?name={{ session.get('username', 'Admin') }}&background=16a34a&color=fff" alt="Profile" class="user-avatar">
+            <div class="hidden lg:block text-left">
+              <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ session.get('username', 'Admin') }}</p>
+            </div>
+            <i class="fa-solid fa-chevron-down text-xs text-gray-500"></i>
+          </button>
+
+          <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 sm:w-56 content-card shadow-2xl z-50">
+            <a href="/profile" class="flex items-center gap-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-user-pen"></i>
+              <span class="text-sm">Edit Profile</span>
+            </a>
+            <a href="/logout" class="flex items-center gap-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2.5 rounded-lg transition-all">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              <span class="text-sm">Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE TITLE -->
+    <div class="page-title-section">
+      <div>
+        <h1 class="page-title">Settings</h1>
+        <p class="page-subtitle">Configure your parking system preferences and settings.</p>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="p-4 sm:p-6 lg:p-8 space-y-6">
+      
+      <!-- Success/Error Messages -->
+      {% if success %}
+        <div class="content-card bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+          <div class="flex items-center gap-3 text-green-800 dark:text-green-200">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+            <span>{{ success }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if error %}
+        <div class="content-card bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800">
+          <div class="flex items-center gap-3 text-red-800 dark:text-red-200">
+            <i class="fa-solid fa-circle-exclamation text-xl"></i>
+            <span>{{ error }}</span>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Settings Sections -->
+      <div class="grid gap-6">
+        
+        <!-- Parking Configuration -->
+        <div class="content-card">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+              <i class="fa-solid fa-parking text-green-400"></i>
+            </div>
+            <div>
+              <h2 class="card-title">Parking Configuration</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Configure parking slots and pricing</p>
+            </div>
+          </div>
+
+          <form method="POST" action="/settings/parking" class="space-y-4">
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium mb-2">Total Parking Slots</label>
+                <input type="number" name="total_slots" value="{{ settings.total_slots or 50 }}" 
+                  class="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-2">Hourly Rate (₹)</label>
+                <input type="number" name="hourly_rate" value="{{ settings.hourly_rate or 20 }}" 
+                  class="w-full px-4 py-2.5 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none">
+              </div>
+            </div>
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-save mr-2"></i>
+              Save Changes
+            </button>
+          </form>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="content-card">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+              <i class="fa-solid fa-bell text-orange-400"></i>
+            </div>
+            <div>
+              <h2 class="card-title">Notification Preferences</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Manage notification settings</p>
+            </div>
+          </div>
+
+          <form method="POST" action="/settings/notifications" class="space-y-4">
+            <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-car text-green-400"></i>
+                <div>
+                  <p class="font-medium">Vehicle Entry Notifications</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when a vehicle enters</p>
+                </div>
+              </div>
+              <input type="checkbox" name="notify_entry" {{ 'checked' if settings.notify_entry else '' }} 
+                class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500">
+            </label>
+
+            <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-right-from-bracket text-orange-400"></i>
+                <div>
+                  <p class="font-medium">Vehicle Exit Notifications</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when a vehicle exits</p>
+                </div>
+              </div>
+              <input type="checkbox" name="notify_exit" {{ 'checked' if settings.notify_exit else '' }}
+                class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500">
+            </label>
+
+            <label class="flex items-center justify-between p-4 rounded-lg bg-gray-50 dark:bg-gray-800 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-credit-card text-green-400"></i>
+                <div>
+                  <p class="font-medium">Payment Notifications</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Get notified about payments</p>
+                </div>
+              </div>
+              <input type="checkbox" name="notify_payment" {{ 'checked' if settings.notify_payment else '' }}
+                class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500">
+            </label>
+
+            <button type="submit" class="btn-primary">
+              <i class="fa-solid fa-save mr-2"></i>
+              Save Preferences
+            </button>
+          </form>
+        </div>
+
+        <!-- System Information -->
+        <div class="content-card">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+              <i class="fa-solid fa-circle-info text-green-400"></i>
+            </div>
+            <div>
+              <h2 class="card-title">System Information</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Application details</p>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Version</p>
+              <p class="font-semibold">VPMS v1.0.0</p>
+            </div>
+            <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Database</p>
+              <p class="font-semibold">SQLite</p>
+            </div>
+            <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Admin User</p>
+              <p class="font-semibold">{{ session.get('username', 'Admin') }}</p>
+            </div>
+            <div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Last Login</p>
+              <p class="font-semibold">{{ current_time }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="content-card border-red-200 dark:border-red-800">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+              <i class="fa-solid fa-triangle-exclamation text-red-400"></i>
+            </div>
+            <div>
+              <h2 class="card-title text-red-600 dark:text-red-400">Danger Zone</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Irreversible actions</p>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <button type="button" onclick="confirmClearData()" class="w-full md:w-auto px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition">
+              <i class="fa-solid fa-trash mr-2"></i>
+              Clear All Data
+            </button>
+            <p class="text-sm text-gray-500 dark:text-gray-400">This will delete all vehicles, payments, and parking records.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* PROFILE MENU */
+function toggleProfile() {
+  document.getElementById("profileMenu").classList.toggle("hidden");
+}
+
+/* MOBILE MENU TOGGLE */
+function toggleMobileMenu() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
+  
+  sidebar.classList.toggle("show");
+  overlay.classList.toggle("show");
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("mobileOverlay");
+  const menuBtn = document.getElementById("mobileMenuBtn");
+  
+  if (overlay && overlay.classList.contains('show') && !sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
+  }
+});
+
+/* CONFIRM CLEAR DATA */
+function confirmClearData() {
+  if (confirm('⚠️ WARNING: This will permanently delete ALL parking data including vehicles, payments, and records. This action cannot be undone!\n\nAre you sure you want to continue?')) {
+    if (confirm('Last confirmation: Delete all data?')) {
+      window.location.href = '/settings/clear-data';
+    }
+  }
+}
+</script>
+
+<!-- Notification System -->
+<script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+
+</body>
+</html>

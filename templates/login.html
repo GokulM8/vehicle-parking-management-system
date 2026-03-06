@@ -2,156 +2,237 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>VPMS | Admin Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VPMS | Sign In</title>
 
-  <!-- Tailwind with Dark Mode Configuration -->
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
-  </script>
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 3px solid white;
+      width: 20px;
+      height: 20px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .input-error {
+      border-color: #ef4444 !important;
+    }
+    .error-message {
+      color: #f87171;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: none;
+    }
+    .error-message.show {
+      display: block;
+    }
+  </style>
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center transition-colors">
-
-  <!-- Login Card -->
-  <div class="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors mx-4">
-
-    <!-- Logo / Title -->
-    <div class="flex items-center gap-3 mb-6 justify-center">
-      <div class="w-10 h-10 bg-blue-600 dark:bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-        P
-      </div>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-950 text-slate-100" style="font-family: Inter, system-ui, sans-serif;">
+  <main class="relative min-h-screen grid lg:grid-cols-2">
+    <section class="hidden lg:flex flex-col justify-between p-12 border-r border-slate-700 bg-slate-900/50">
       <div>
-        <h1 class="text-xl font-bold text-gray-800 dark:text-white">VPMS</h1>
-        <p class="text-xs text-gray-500 dark:text-gray-400">Parking System</p>
+        <div class="inline-flex items-center gap-3 mb-8">
+          <div class="h-11 w-11 rounded-xl bg-gradient-to-br from-green-500 to-teal-400 flex items-center justify-center font-bold text-white">
+            <i class="fa-solid fa-parking text-xl"></i>
+          </div>
+          <div>
+            <p class="font-bold text-lg text-white">VPMS</p>
+            <p class="text-xs text-slate-400">Vehicle Parking Management</p>
+          </div>
+        </div>
+        <h1 class="text-4xl font-extrabold leading-tight max-w-md text-white">Operate your parking floor with <span class="text-green-400">speed</span>, clarity, and control.</h1>
       </div>
-    </div>
+      <p class="text-sm text-slate-400">Secure admin access for entries, exits, and payments.</p>
+    </section>
 
-    <h2 class="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
-      Admin Login
-    </h2>
-    <p class="text-center text-gray-500 dark:text-gray-400 text-sm mb-6">
-      Sign in to manage parking operations
-    </p>
+    <section class="flex items-center justify-center p-6 sm:p-10">
+      <div class="w-full max-w-md rounded-3xl bg-slate-800 p-7 sm:p-8 border border-slate-700">
+        <h2 class="text-2xl font-bold mb-2 text-white">Welcome back</h2>
+        <p class="text-sm text-slate-400 mb-6">Sign in to continue to your dashboard.</p>
 
-    <!-- Error Message -->
-    {% if error %}
-      <div class="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-300 text-sm p-3 rounded-lg mb-4">
-        {{ error }}
+        {% if error %}
+          <div class="mb-4 rounded-xl bg-red-950 border border-red-800 px-4 py-3 text-sm text-red-400 flex items-center gap-2">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ error }}</span>
+          </div>
+        {% endif %}
+
+        <form method="POST" id="loginForm" class="space-y-4">
+          <div>
+            <label class="block text-sm mb-1 text-slate-300 font-medium">
+              <i class="fa-solid fa-envelope mr-1"></i>
+              Email
+            </label>
+            <input type="email" name="email" id="email" required placeholder="admin@vpms.com"
+              class="w-full rounded-xl bg-slate-700 px-4 py-3 text-sm text-white outline-none transition placeholder-slate-500 border border-slate-600 focus:border-green-500 focus:ring-2 focus:ring-green-500/20" />
+            <div class="error-message" id="emailError">Please enter a valid email address</div>
+          </div>
+
+          <div>
+            <label class="block text-sm mb-1 text-slate-300 font-medium">
+              <i class="fa-solid fa-lock mr-1"></i>
+              Password
+            </label>
+            <div class="relative">
+              <input type="password" name="password" id="password" required placeholder="••••••••"
+                class="w-full rounded-xl bg-slate-700 px-4 py-3 pr-12 text-sm text-white outline-none transition placeholder-slate-500 border border-slate-600 focus:border-green-500 focus:ring-2 focus:ring-green-500/20" />
+              <button type="button" onclick="togglePassword('password', 'passwordToggle')" 
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition">
+                <i class="fa-solid fa-eye" id="passwordToggle"></i>
+              </button>
+            </div>
+            <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="remember_me" class="w-4 h-4 rounded border-slate-600 bg-slate-700 text-green-600 focus:ring-2 focus:ring-green-500/20">
+              <span class="text-sm text-slate-300">Remember me</span>
+            </label>
+            <a href="#" class="text-sm text-green-400 hover:text-green-300 transition">Forgot password?</a>
+          </div>
+
+          <button type="submit" id="submitBtn"
+            class="w-full rounded-xl bg-green-600 hover:bg-green-700 px-4 py-3 font-semibold text-white transition border border-green-500 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span id="btnText">Sign In</span>
+            <div id="btnSpinner" class="spinner hidden"></div>
+          </button>
+        </form>
+
+        <div class="relative my-6">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-slate-700"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-slate-800 text-slate-400">Or continue with</span>
+          </div>
+        </div>
+
+        <button type="button" onclick="loginWithGoogle()"
+          class="w-full rounded-xl bg-slate-700 hover:bg-slate-600 px-4 py-3 font-medium text-white transition border border-slate-600 flex items-center justify-center gap-3">
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          </svg>
+          <span>Sign in with Google</span>
+        </button>
+
+        <p class="mt-6 text-sm text-slate-400 text-center">
+          New admin?
+          <a href="{{ url_for('register') }}" class="font-semibold text-green-400 hover:text-green-300">Create account</a>
+        </p>
       </div>
-    {% endif %}
+    </section>
+  </main>
 
-    <!-- Login Form -->
-    <form method="POST" class="space-y-5">
+  <script>
+    // Form validation
+    const form = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
 
-      <!-- Email -->
-      <div>
-        <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-          Email Address
-        </label>
-        <input
-          type="email"
-          name="email"
-          required
-          placeholder="admin@vpms.com"
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+    // Email validation
+    emailInput.addEventListener('blur', function() {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.value)) {
+        this.classList.add('input-error');
+        document.getElementById('emailError').classList.add('show');
+      } else {
+        this.classList.remove('input-error');
+        document.getElementById('emailError').classList.remove('show');
+      }
+    });
 
-      <!-- Password -->
-      <div>
-        <label class="block text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
-          Password
-        </label>
-        <input
-          type="password"
-          name="password"
-          required
-          placeholder="••••••••"
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+    emailInput.addEventListener('input', function() {
+      this.classList.remove('input-error');
+      document.getElementById('emailError').classList.remove('show');
+    });
 
-      <!-- Login Button -->
-      <button
-        type="submit"
-        class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 active:bg-blue-800 transition touch-manipulation"
-      >
-        Login
-      </button>
-    </form>
+    // Password validation
+    passwordInput.addEventListener('blur', function() {
+      if (this.value.length < 6) {
+        this.classList.add('input-error');
+        document.getElementById('passwordError').classList.add('show');
+      } else {
+        this.classList.remove('input-error');
+        document.getElementById('passwordError').classList.remove('show');
+      }
+    });
 
-    <!-- Register Link -->
-    <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
-      Don't have an account?
-      <a href="/register" class="text-blue-600 dark:text-blue-400 font-medium hover:underline active:text-blue-700 dark:active:text-blue-300 touch-manipulation inline-block">
-        Register
-      </a>
-    </p>
+    passwordInput.addEventListener('input', function() {
+      this.classList.remove('input-error');
+      document.getElementById('passwordError').classList.remove('show');
+    });
 
-  </div>
+    // Form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Validate all fields
+      let isValid = true;
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (!emailPattern.test(emailInput.value)) {
+        emailInput.classList.add('input-error');
+        document.getElementById('emailError').classList.add('show');
+        isValid = false;
+      }
+      
+      if (passwordInput.value.length < 6) {
+        passwordInput.classList.add('input-error');
+        document.getElementById('passwordError').classList.add('show');
+        isValid = false;
+      }
+      
+      if (isValid) {
+        // Show loading state
+        submitBtn.disabled = true;
+        btnText.textContent = 'Signing in...';
+        btnSpinner.classList.remove('hidden');
+        
+        // Submit form
+        this.submit();
+      }
+    });
 
-<script>
-// Theme initialization - must run before page renders
-(function() {
-  const savedTheme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
-  const html = document.documentElement;
-  
-  if (isDark) {
-    html.classList.add('dark');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    html.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
-  }
-  
-  // Update icon immediately
-  const themeIcon = document.getElementById('themeIcon');
-  if (themeIcon) {
-    if (isDark) {
-      themeIcon.classList.remove('fa-moon');
-      themeIcon.classList.add('fa-sun');
-    } else {
-      themeIcon.classList.remove('fa-sun');
-      themeIcon.classList.add('fa-moon');
+    // Toggle password visibility
+    function togglePassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
     }
-  }
-})();
 
-// Theme Toggle Functionality
-function toggleTheme(e) {
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-  
-<!-- Force Dark Mode Script -->
-<script>
-// Force dark mode initialization
-(function() {
-  const html = document.documentElement;
-  html.classList.add('dark');
-  localStorage.setItem('theme', 'dark');
-})();
-
-// Ensure dark mode on DOM load
-document.addEventListener('DOMContentLoaded', function() {
-  document.documentElement.classList.add('dark');
-});
-</script>
-
+    // Google OAuth
+    function loginWithGoogle() {
+      // Redirect to Google OAuth endpoint
+      window.location.href = '/auth/google';
+    }
+  </script>
 </body>
 </html>
